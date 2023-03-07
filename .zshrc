@@ -1,4 +1,4 @@
-[[ -n $SSH_CONNECTION ]] && ZSH_THEME="agnoster-hostname" || ZSH_THEME="clean"
+[[ -n $SSH_CONNECTION ]] && ZSH_THEME="clean" || ZSH_THEME="clean"
 DISABLE_AUTO_UPDATE="true"
 ENABLE_CORRECTION="false"
 HYPHEN_INSENSITIVE="true"
