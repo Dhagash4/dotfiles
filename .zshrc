@@ -1,4 +1,4 @@
-[[ -n $SSH_CONNECTION ]] && ZSH_THEME="agnoster-hostname" || ZSH_THEME="agnoster"
+[[ -n $SSH_CONNECTION ]] && ZSH_THEME="robbyrussell" || ZSH_THEME="robbyrussell"
 DISABLE_AUTO_UPDATE="true"
 ENABLE_CORRECTION="false"
 HYPHEN_INSENSITIVE="true"
@@ -20,3 +20,6 @@ source $HOME/.functions.zsh
 
 
 eval $(thefuck --alias)
+
+
+

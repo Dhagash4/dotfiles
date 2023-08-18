@@ -1,6 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
-
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 # PATH
 #export PATH=$HOME/scripts/:$PATH
 #export PATH=$HOME/usr/bin:$PATH
@@ -18,4 +19,5 @@ export ZSH=$HOME/.oh-my-zsh
 # export CMAKE_INSTALL_PREFIX=$HOME/usr/
 # export CPATH=$HOME/usr/include/
 # export LD_LIBRARY_PATH=$HOME/usr/lib:$LD_LIBRARY_PATH
+
 
