@@ -12,3 +12,5 @@ alias gs="git status"
 
 alias c="clear"
 alias r="source ~/.zshrc"
+alias ca="source ~/anaconda3/bin/activate"
+alias da="conda deactivate"

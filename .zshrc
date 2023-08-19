@@ -1,4 +1,4 @@
-[[ -n $SSH_CONNECTION ]] && ZSH_THEME="robbyrussell" || ZSH_THEME="robbyrussell"
+[ -n $SSH_CONNECTION]  && ZSH_THEME="agnoster" || ZSH_THEME="agnoster"
 DISABLE_AUTO_UPDATE="true"
 ENABLE_CORRECTION="false"
 HYPHEN_INSENSITIVE="true"
