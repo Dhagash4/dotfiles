@@ -1,11 +1,18 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Enable universal ctags
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:gutentags_enabled=1
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VimTeX
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" let g:vimtex_compiler_latexrun_engines = {'xelatex':'xelatex'}
 let g:vimtex_doc_handlers = ['vimtex#doc#handlers#texdoc']
 let g:vimtex_imaps_enabled = 0
 let g:vimtex_toc_config = { 'layers' : ['content'], 'show_help' : 0}
-let g:vimtex_quickfix_open_on_warning = 1
-let g:vimtex_quickfix_method = 'pplatex'
+" let g:vimtex_quickfix_open_on_warning = 1
+" let g:vimtex_quickfix_method = 'pplatex'
 let g:vimtex_quickfix_ignore_filters = [
       \ 'Underfull \\vbox',
       \ 'Overfull \\vbox',
@@ -50,3 +57,12 @@ if has("macunix")
 elseif has("unix")
   let g:vimtex_view_method = 'zathura'
 endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set textwidth=0
+set colorcolumn=0
+set spell
+set iskeyword+=-  " enables ctags to find fig:this-sucks
+set iskeyword+=\\ " enables ctags to find /my_shitty_command
