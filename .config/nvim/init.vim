@@ -1,7 +1,6 @@
 "--Plugins for vim
 call plug#begin()
 
-
 "Insert, delete, quotes, brackets in pair
 Plug 'jiangmiao/auto-pairs'
 
@@ -43,9 +42,19 @@ Plug 'nvim-treesitter/nvim-treesitter'
 " To have infinite undo
 Plug 'simnalamburt/vim-mundo'
 
+" Developers icons
+Plug 'ryanoasis/vim-devicons'
+
+" Move consistently between windows in tmux and vim
+Plug 'christoomey/vim-tmux-navigator'
+
+" Latex extension
+Plug 'lervag/vimtex'
+
+" Track the engine.
+Plug 'SirVer/ultisnips'
+
+" Snippets are separated from the engine. Add this if you want them:
+Plug 'honza/vim-snippets'
+
 call plug#end()
-
-" --- Set Leader Key
-let mapleader ="\<space>"
-
-
