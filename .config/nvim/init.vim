@@ -57,4 +57,11 @@ Plug 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
 
+" Quick fix
+ Plug 'kevinhwang91/nvim-bqf'
+
+" Dashboard
+Plug 'nvimdev/dashboard-nvim'
+Plug 'nvim-tree/nvim-web-devicons'
+
 call plug#end()

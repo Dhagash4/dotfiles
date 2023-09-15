@@ -1,0 +1,31 @@
+{
+  // Python 
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": "$HOME/Library/Python/3.9/bin/black",
+  "python.linting.pylintEnabled": true,
+  "python.pythonPath": "/usr/bin/python3",
+  // C++
+  "clangd.enabled": true,
+  "clangd.compilationDatabaseCandidates": [
+    "${workspaceFolder/build/}",
+    "${workspaceFolder}"
+  ],
+  "clangd.arguments": [
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=iwyu",
+    "--inlay-hints=false"
+  ],
+  "clangd.path": "/usr/bin/clangd",
+  // LaTex
+  "coc.source.word.filetypes": [
+    "latex"
+  ],
+  // Coc preferences
+  "coc.source.file.ignoreHidden": false,
+  "coc.preferences.useQuickfixForLocations": true,
+  "coc.preferences.formatOnSave": true,
+  "inlayHint.enable": false,
+  "diagnostic.enable": true,
+  // "coc.preferences.formatOnSaveFiletypes": ["python","cpp"],
+}

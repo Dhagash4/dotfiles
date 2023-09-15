@@ -8,13 +8,16 @@ ZSH_TMUX_AUTOQUIT="true"
 ZSH_TMUX_AUTOSTART="false"
 
 export ZSH="$HOME/.oh-my-zsh"
-plugins=(git
+plugins=(
+  git
 	zsh-autocomplete
 	z
+  fzf
 	zsh-syntax-highlighting
-        colored-man-pages
-        command-not-found
-        zsh-autosuggestions)
+  colored-man-pages
+  command-not-found
+  zsh-autosuggestions
+  ag)
 source $ZSH/oh-my-zsh.sh
 source $HOME/.aliases.zsh
 source $HOME/.functions.zsh

@@ -1,10 +1,13 @@
 " --- Set Leader Key to space
 let mapleader = " "
 
+" --- Enable filetype indent
+filetype plugin indent on
+
 " --- VIM RELATED SETTINGS
 set number relativenumber
-set autoindent expandtab tabstop=2 shiftwidth=2
 set splitright
+
 " --- AIRLINE THEME ---
 let g:airline_theme = 'gruvbox_material'
 let g:airline_left_sep = ''
@@ -18,6 +21,16 @@ let g:gruvbox_italicize_comments = 1
 let g:gruvbox_italicize_strings = 1
 
 colorscheme gruvbox
+
+"--- Text, tab and indent related
+set smarttab
+set autoindent
+set smartindent
+set wrap
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=-1
 
 " --- FOR BETTER LIFE ---
 nnoremap <Up> <NOP>

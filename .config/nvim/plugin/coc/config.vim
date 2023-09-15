@@ -1,7 +1,22 @@
 " --- CoC Config ---
+let g:coc_config_home='$HOME/.config/nvim/plugin/coc'
 let g:coc_global_extensions = [
-    \ 'coc-pyright'
-\ ]
+      \'coc-clangd',
+      \'coc-cmake',
+      \'coc-emoji',
+      \'coc-explorer',
+      \'coc-json',
+      \'coc-lua',
+      \'coc-markdownlint',
+      \'coc-pyright',
+      \'coc-snippets',
+      \'coc-vimlsp',
+      \'coc-vimtex',
+      \'coc-word',
+      \'coc-yaml',
+      \]
+
+
 " use <tab> to trigger completion and navigate to the next complete item
 " <tab> could be remapped by another plugin, use :verbose imap <tab> to check if it's mapped as expected.
 function! CheckBackspace() abort
@@ -33,5 +48,4 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-
-
+nmap <silent> ff <Plug>(coc-fix-current)
