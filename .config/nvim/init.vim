@@ -34,7 +34,9 @@ Plug 'preservim/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin' | Plug 'ryanoasis
 
 " Fuzzy finder
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.2' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.3' }
+Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'nvim-telescope/telescope-project.nvim'
 Plug 'BurntSushi/ripgrep'
 Plug 'sharkdp/fd'
 Plug 'nvim-treesitter/nvim-treesitter'
@@ -63,5 +65,8 @@ Plug 'honza/vim-snippets'
 " Dashboard
 Plug 'nvimdev/dashboard-nvim'
 Plug 'nvim-tree/nvim-web-devicons'
+Plug 'neovim/nvim-lspconfig'
+" Preview for markdown files
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()}, 'for': ['markdown', 'vim-plug']}
 
 call plug#end()

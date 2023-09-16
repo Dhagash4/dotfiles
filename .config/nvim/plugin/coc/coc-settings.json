@@ -19,7 +19,8 @@
   "clangd.path": "/usr/bin/clangd",
   // LaTex
   "coc.source.word.filetypes": [
-    "latex"
+    "latex",
+    "markdown"
   ],
   // Coc preferences
   "coc.source.file.ignoreHidden": false,
