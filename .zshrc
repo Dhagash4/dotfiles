@@ -1,4 +1,4 @@
-[ -n $SSH_CONNECTION]  && ZSH_THEME="gnzh" || ZSH_THEME="gnzh"
+[ -n $SSH_CONNECTION]  && ZSH_THEME="simple" || ZSH_THEME="simple"
 
 DISABLE_AUTO_UPDATE="true"
 ENABLE_CORRECTION="false"

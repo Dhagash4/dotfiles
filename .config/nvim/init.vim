@@ -62,8 +62,7 @@ Plug 'honza/vim-snippets'
 " Quick fix
  Plug 'kevinhwang91/nvim-bqf'
 
-" Dashboard
-Plug 'nvimdev/dashboard-nvim'
+
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'neovim/nvim-lspconfig'
 " Preview for markdown files

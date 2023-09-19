@@ -1,4 +1,5 @@
 " --- CoC Config ---
+let g:coc_snippet_next = '<tab>'
 let g:coc_config_home='$HOME/.config/nvim/plugin/coc'
 let g:coc_global_extensions = [
       \'coc-clangd',
