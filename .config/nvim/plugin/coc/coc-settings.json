@@ -28,5 +28,6 @@
   "coc.preferences.formatOnSave": true,
   "inlayHint.enable": false,
   "diagnostic.enable": true,
+  "snippets.ultisnips.pythonPrompt": false,
   // "coc.preferences.formatOnSaveFiletypes": ["python","cpp"],
 }

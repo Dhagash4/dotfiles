@@ -32,6 +32,9 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=-1
 
+"Binding for gotodefination
+nmap <silent>gd <C-]>
+
 " --- FOR BETTER LIFE ---
 nnoremap <Up> <NOP>
 nnoremap <Down> <NOP>

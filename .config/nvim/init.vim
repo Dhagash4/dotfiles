@@ -52,7 +52,7 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Latex extension
 Plug 'lervag/vimtex'
-
+Plug 'ludovicchabant/vim-gutentags'
 " Track the engine.
 Plug 'SirVer/ultisnips'
 
