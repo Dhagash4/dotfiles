@@ -18,6 +18,9 @@
   ],
   "clangd.path": "/usr/bin/clangd",
   // LaTex
+  "coc.source.vimtex.filetypes": [
+    "tex"
+  ],
   "coc.source.word.filetypes": [
     "latex",
     "markdown"

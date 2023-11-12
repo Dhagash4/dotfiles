@@ -32,6 +32,9 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=-1
 
+" Python path for nvim
+let g:python3_host_prog = "/Users/dhagash/anaconda3/bin/python3"
+
 "Binding for gotodefination
 nmap <silent>gd <C-]>
 
@@ -40,3 +43,6 @@ nnoremap <Up> <NOP>
 nnoremap <Down> <NOP>
 nnoremap <Left> <NOP>
 nnoremap <Right> <NOP>
+"---- TAB SWITCH ----------------
+nnoremap <C-Left> :tabprevious<CR>
+nnoremap <C-Right> :tabnext<CR>
