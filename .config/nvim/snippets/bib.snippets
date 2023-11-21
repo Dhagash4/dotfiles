@@ -1,0 +1,34 @@
+snippet inp "inproceddings according to boss" 
+@inproceedings{ ${1:id},
+		author = {${2:authors separated by "and"}},
+		title = {{${3:title}}},
+		booktitle = ${4:booktitle},
+		year = ${5:year},
+		url = {${6:url}},
+	}
+$0
+
+snippet art "article according to boss" 
+@article{ ${1:id},
+		author = {${2:authors separated by "and"}},
+		title = {{${3:title}}},
+		journal = arxiv,
+		volume = {arxiv:${4:volume}},
+		year = ${5:year},
+		url = {${6:url}},
+	}
+$0
+
+snippet journal "journal according to boss" 
+@article{ ${1:id},
+		author = {${2:authors separated by "and"}},
+		title = {{${3:title}}},
+		journal = ${4:journal},
+		volume = {${5:vol}},
+		number = {${6:number}},
+		pages = {${7:pages}},
+		year = ${8:year},
+		url = {${9:url}},
+	}
+$0
+
