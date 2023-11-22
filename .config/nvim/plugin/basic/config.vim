@@ -31,9 +31,16 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=-1
-
-" Python path for nvim
+set nohlsearch
+set clipboard+=unnamedplus
+"Python path for nvim
 let g:python3_host_prog = "/Users/dhagash/anaconda3/bin/python3"
+
+" Configuration for UltiSnips
+" let g:UltiSnipsSnippetDirectories=[$HOME.'/.config/nvim/UltiSnips']
+" let g:UltiSnipsExpandTrigger="<Tab>"
+" let g:UltiSnipsJumpForwardTrigger="<jk>"
+" let g:UltiSnipsJumpBackwardTrigger="<kj>"
 
 "Binding for gotodefination
 nmap <silent>gd <C-]>
@@ -43,6 +50,18 @@ nnoremap <Up> <NOP>
 nnoremap <Down> <NOP>
 nnoremap <Left> <NOP>
 nnoremap <Right> <NOP>
+
 "---- TAB SWITCH ----------------
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
+
+" Always move down with vim keys even in soft-lines
+noremap <expr> j v:count ? 'j' : 'gj'
+noremap <expr> k v:count ? 'k' : 'gk'
+
+" Toggle highlight when <leader><cr> is pressed
+map <silent><expr> <leader><cr> (&hls && v:hlsearch ? ':set nohlsearch' : ':set hls')."\n"
+
+" Copy paste: leader+c / leader+v
+map <silent><C-c> "+y
+map <silent><C-p> "0p

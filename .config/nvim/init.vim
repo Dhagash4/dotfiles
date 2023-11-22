@@ -53,11 +53,6 @@ Plug 'christoomey/vim-tmux-navigator'
 " Latex extension
 Plug 'lervag/vimtex'
 Plug 'ludovicchabant/vim-gutentags'
-" Track the engine.
-Plug 'SirVer/ultisnips'
-
-" Snippets are separated from the engine. Add this if you want them:
-Plug 'honza/vim-snippets'
 
 " Quick fix
  Plug 'kevinhwang91/nvim-bqf'
