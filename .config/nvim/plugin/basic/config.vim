@@ -34,13 +34,8 @@ set softtabstop=-1
 set nohlsearch
 set clipboard+=unnamedplus
 "Python path for nvim
-let g:python3_host_prog = "/Users/dhagash/anaconda3/bin/python3"
+let g:python3_host_prog = "$HOME/anaconda3/bin/python3"
 
-" Configuration for UltiSnips
-" let g:UltiSnipsSnippetDirectories=[$HOME.'/.config/nvim/UltiSnips']
-" let g:UltiSnipsExpandTrigger="<Tab>"
-" let g:UltiSnipsJumpForwardTrigger="<jk>"
-" let g:UltiSnipsJumpBackwardTrigger="<kj>"
 
 "Binding for gotodefination
 nmap <silent>gd <C-]>
