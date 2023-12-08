@@ -40,6 +40,9 @@ Plug 'nvim-telescope/telescope-project.nvim'
 Plug 'BurntSushi/ripgrep'
 Plug 'sharkdp/fd'
 Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
 
 " To have infinite undo
 Plug 'simnalamburt/vim-mundo'
@@ -62,5 +65,8 @@ Plug 'nvim-tree/nvim-web-devicons'
 Plug 'neovim/nvim-lspconfig'
 " Preview for markdown files
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()}, 'for': ['markdown', 'vim-plug']}
+
+"Zenmode
+Plug 'folke/zen-mode.nvim'
 
 call plug#end()

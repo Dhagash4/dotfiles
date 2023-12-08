@@ -60,3 +60,16 @@ map <silent><expr> <leader><cr> (&hls && v:hlsearch ? ':set nohlsearch' : ':set 
 " Copy paste: leader+c / leader+v
 map <silent><C-c> "+y
 map <silent><C-p> "0p
+
+""""""""""""""""""""""""""""""""""""""""""
+"Fold
+""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""
+set foldmethod=indent
+set nofoldenable
+set foldlevel=99
+
+""""""""""""""""""""""""""""""""""""""""""
+"Zenmode
+""""""""""""""""""""""""""""""""""""""""""
+nnoremap <leader>z :ZenMode<CR>

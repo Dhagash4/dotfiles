@@ -24,9 +24,3 @@ source $HOME/.functions.zsh
 
 
 eval $(thefuck --alias)
-
-
-
-# Entry point for Depthai demo app, enables to run <depthai_launcher> in terminal
-# export PATH=$PATH:/Users/dhagash/projects/depthai//depthai/entrypoint
-# export PATH=$PATH:/Users/dhagash/projects/depthai/depthai/entrypoint
