@@ -73,3 +73,9 @@ set foldlevel=99
 "Zenmode
 """"""""""""""""""""""""""""""""""""""""""
 nnoremap <leader>z :ZenMode<CR>
+
+""""""""""""""""""""""""""""""""""""""""""
+"Saving made easy
+""""""""""""""""""""""""""""""""""""""""""
+map <silent><C-s>     :w<cr>
+map! <silent><C-s>     <ESC>:w<cr>
