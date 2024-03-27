@@ -47,3 +47,8 @@
     syntax-theme = OneHalfDark
     whitespace-error-style = reverse red
     zero-style = dim syntax
+[init]
+	defaultBranch = main
+[user]
+	name = Dhagash Desai
+	email = desai.dhagash@gmail.com

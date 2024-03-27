@@ -4,6 +4,7 @@ let g:coc_snippet_prev = '<S-tab>'
 let g:coc_config_home='$HOME/.config/nvim/plugin/coc'
 let g:coc_global_extensions = [
       \'coc-clangd',
+      \'coc-docker',
       \'coc-cmake',
       \'coc-emoji',
       \'coc-explorer',
@@ -41,7 +42,7 @@ function! CheckBackspace() abort
 endfunction
 
 " Enable Ctags search
-set tagfunc=CocTagFunc
+" set tagfunc=CocTagFunc
 
 "--- CoC code navigation
 nmap <silent> gd <Plug>(coc-definition)

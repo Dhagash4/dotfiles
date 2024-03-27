@@ -29,6 +29,9 @@ Plug 'vim-airline/vim-airline-themes'
 "PyDocstring
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
 
+"for git thingy
+Plug 'tpope/vim-fugitive'
+
 " NERD Tree
 Plug 'preservim/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin' | Plug 'ryanoasis/vim-devicons'
 
@@ -55,7 +58,7 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Latex extension
 Plug 'lervag/vimtex'
-Plug 'ludovicchabant/vim-gutentags'
+" Plug 'ludovicchabant/vim-gutentags'
 
 " Quick fix
  Plug 'kevinhwang91/nvim-bqf'
@@ -68,5 +71,9 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()}, 'for': [
 
 "Zenmode
 Plug 'folke/zen-mode.nvim'
+
+"Neoformat
+Plug 'sbdchd/neoformat'
+
 
 call plug#end()
