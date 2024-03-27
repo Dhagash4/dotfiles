@@ -1,5 +1,3 @@
-# alias py='ipython3'
-# alias python="python3.10"
 alias xopen='xdg-open'
 alias xcopy='xclip -selection clipboard'
 alias df='df -h -xsquashfs -xtmpfs -xdevtmpfs'
