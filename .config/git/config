@@ -1,6 +1,8 @@
-[user]
-	name = Dhagash Desai
-	email = desai.dhagash@gmail.com
+[includeIf "gitdir:~/projects/personal/"]
+    path = ~/projects/personal/.gitconfig-personal
+
+[includeIf "gitdir:~/projects/work/"]
+    path = ~/projects/work/.gitconfig-work
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
