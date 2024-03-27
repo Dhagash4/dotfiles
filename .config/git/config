@@ -1,6 +1,6 @@
 [user]
-  email = desai.dhagash@gmail.com
-  name  = Dhagash Desai
+	name = Dhagash Desai
+	email = desai.dhagash@gmail.com
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
@@ -48,7 +48,5 @@
     whitespace-error-style = reverse red
     zero-style = dim syntax
 [init]
-	defaultBranch = main
-[user]
-	name = Dhagash Desai
-	email = desai.dhagash@gmail.com
+    defaultBranch = main
+

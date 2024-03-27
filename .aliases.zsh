@@ -11,7 +11,7 @@ alias c="clear"
 alias rz="source ~/.zshrc"
 alias ca="source ~/anaconda3/bin/activate"
 alias da="conda deactivate"
-alias ld="tree -d -L 1"
+alias ldd="tree -d -L 1"
 
 #directory alias
 alias paper="cd ~/projects/personal/papers_to_read"
