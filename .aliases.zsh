@@ -14,5 +14,4 @@ alias ldd="tree -d -L 1"
 #directory alias
 alias paper="cd ~/projects/personal/papers_to_read"
 alias rgbd="cd ~/projects/personal/rgbd_dataloader"
-alias datacept="cd ~/projects/datasets"
-
+alias work="cd ~/projects/work"
