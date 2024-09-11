@@ -15,3 +15,7 @@ alias ldd="tree -d -L 1"
 alias paper="cd ~/projects/personal/papers_to_read"
 alias rgbd="cd ~/projects/personal/rgbd_dataloader"
 alias work="cd ~/projects/work"
+
+#kitty aliases
+alias ssh="kitty +kitten ssh"
+
