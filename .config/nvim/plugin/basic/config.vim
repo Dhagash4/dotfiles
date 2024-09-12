@@ -33,9 +33,6 @@ set shiftwidth=2
 set softtabstop=-1
 set nohlsearch
 set clipboard+=unnamedplus
-"Python path for nvim
-let g:python3_host_prog = "$HOME/anaconda3/bin/python3"
-
 
 "Binding for gotodefination
 nmap <silent>gd <C-]>
@@ -93,3 +90,8 @@ let g:shfmt_opt="-ci"
 " => Neoformat
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <leader>F :Neoformat<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Telescope
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <silent> <leader>ff :Telescope find_files<CR>
