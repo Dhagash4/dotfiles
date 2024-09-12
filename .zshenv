@@ -5,4 +5,4 @@ export LANG=en_US.UTF-8
 
 # Others
 export EDITOR='nvim'
-
+command -v thefuck >/dev/null 2>&1 && eval $(thefuck --alias)
