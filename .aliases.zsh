@@ -17,5 +17,5 @@ alias rgbd="cd ~/projects/personal/rgbd_dataloader"
 alias work="cd ~/projects/work"
 
 #kitty aliases
-alias ssh="kitty +kitten ssh"
+alias ssh="kitten ssh"
 
