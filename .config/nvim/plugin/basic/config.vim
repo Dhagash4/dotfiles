@@ -9,18 +9,14 @@ set number relativenumber
 set splitright
 
 " --- AIRLINE THEME ---
-let g:airline_theme = 'gruvbox_material'
-let g:airline_left_sep = ''
+let g:airline_theme = 'catppuccin'
+let g:airline_left_sep = ''
 let g:airline_powerline_fonts=1
 
 " --- THEME ---
 set background=dark
-let g:gruvbox_material_background = 'dark'
-let g:gruvbox_material_better_performance = 1
-let g:gruvbox_italicize_comments = 1
-let g:gruvbox_italicize_strings = 1
 
-colorscheme gruvbox
+colorscheme catppuccin-frappe
 
 "--- Text, tab and indent related
 set smarttab
