@@ -13,8 +13,8 @@ plugins=(
   sudo
 	z
   fzf
-	zsh-syntax-highlighting
-	zsh-autocomplete
+	fzf-tab
+  zsh-syntax-highlighting
   colored-man-pages
   command-not-found
   zsh-autosuggestions
