@@ -1,4 +1,12 @@
-[ -n $SSH_CONNECTION]  && ZSH_THEME="simple" || ZSH_THEME="simple"
+# [ -n $SSH_CONNECTION]  && ZSH_THEME="simple" || ZSH_THEME="simple"
+
+if [ -n "$SSH_CONNECTION" ]; then
+    ZSH_THEME="simple"
+elif [[ -f /.dockerenv ]]; then
+    ZSH_THEME="agnoster"  # Set a different theme for Docker
+else
+    ZSH_THEME="simple"
+fi
 
 DISABLE_AUTO_UPDATE="true"
 ENABLE_CORRECTION="false"
