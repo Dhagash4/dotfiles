@@ -3,7 +3,7 @@
 if [ -n "$SSH_CONNECTION" ]; then
     ZSH_THEME="simple"
 elif [[ -f /.dockerenv ]]; then
-    ZSH_THEME="agnoster"  # Set a different theme for Docker
+   PROMPT="%F{red}[DOCKER] %F{green}%n@%m %F{blue}%~ %#%f"
 else
     ZSH_THEME="simple"
 fi
