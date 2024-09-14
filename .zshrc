@@ -3,7 +3,7 @@
 if [ -n "$SSH_CONNECTION" ]; then
     ZSH_THEME="simple"
 elif [[ -f /.dockerenv ]]; then
-   PROMPT="%F{red}[DOCKER] %F{green}%n@%m %F{blue}%~ %#%f"
+    ZSH_THEME="agnoster"
 else
     ZSH_THEME="simple"
 fi
