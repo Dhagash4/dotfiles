@@ -1,9 +1,7 @@
-# [ -n $SSH_CONNECTION]  && ZSH_THEME="simple" || ZSH_THEME="simple"
-
 if [ -n "$SSH_CONNECTION" ]; then
     ZSH_THEME="simple"
 elif [[ -f /.dockerenv ]]; then
-    ZSH_THEME="agnoster"
+    ZSH_THEME="gnzh"
 else
     ZSH_THEME="simple"
 fi
