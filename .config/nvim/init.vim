@@ -16,8 +16,11 @@ Plug 'sheerun/vim-polyglot'
 "CoC
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-"Catppuccin Theme
-Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+"GruvBox Theme
+Plug 'morhetz/gruvbox'
+
+"GruvBox Material Theme
+Plug 'sainnhe/gruvbox-material'
 
 "Status like theme
 Plug 'vim-airline/vim-airline'

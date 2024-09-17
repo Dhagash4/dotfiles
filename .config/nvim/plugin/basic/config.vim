@@ -20,6 +20,8 @@ let g:gruvbox_material_better_performance = 1
 let g:gruvbox_italicize_comments = 1
 let g:gruvbox_italicize_strings = 1
 
+colorscheme gruvbox
+
 "--- Text, tab and indent related
 set smarttab
 set autoindent
@@ -60,9 +62,13 @@ map <silent><C-p> "0p
 "Fold
 """"""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""
-set foldmethod=indent
+set foldmethod="expr"
+set foldexpr="v:lua.vim.treesitter.foldexpr()"
 set nofoldenable
 set foldlevel=99
+set foldtext=""
+set foldlevelstart=1
+set foldnestmax=4
 
 """"""""""""""""""""""""""""""""""""""""""
 "Zenmode
@@ -93,3 +99,4 @@ nnoremap <leader>F :Neoformat<CR>
 " => Telescope
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <silent> <leader>ff :Telescope find_files<CR>
+nnoremap <silent> <leader>fg :Telescope live_grep<CR>
