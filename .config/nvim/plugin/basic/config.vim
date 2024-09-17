@@ -62,8 +62,8 @@ map <silent><C-p> "0p
 "Fold
 """"""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""
-set foldmethod="expr"
-set foldexpr="v:lua.vim.treesitter.foldexpr()"
+set foldmethod=expr
+set foldexpr=v:lua.vim.treesitter.foldexpr()
 set nofoldenable
 set foldlevel=99
 set foldtext=""
