@@ -75,4 +75,8 @@ Plug 'folke/zen-mode.nvim'
 "Neoformat
 Plug 'sbdchd/neoformat'
 
+"Remote development
+Plug 'amitds1997/remote-nvim.nvim', {'tag': 'v0.3.9'}
+Plug 'MunifTanjim/nui.nvim'
+
 call plug#end()

@@ -10,6 +10,7 @@ alias rz="source ~/.zshrc"
 alias ca="source ~/anaconda3/bin/activate"
 alias da="conda deactivate"
 alias ldd="tree -d -L 1"
+alias cat="batcat"
 
 #directory alias
 alias paper="cd ~/projects/personal/papers_to_read"

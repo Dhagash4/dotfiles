@@ -26,6 +26,8 @@ plugins=(
   zsh-autosuggestions
   dirhistory
 )
+
+
 source $ZSH/oh-my-zsh.sh
 source $HOME/.aliases.zsh
 source $HOME/.functions.zsh
