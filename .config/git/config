@@ -44,3 +44,7 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+[mergetool "meld"]
+	path = /usr/bin/meld
+[mergetool]
+	keepBackup = false
