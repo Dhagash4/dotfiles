@@ -24,7 +24,7 @@ plugins=(
   colored-man-pages
   command-not-found
   zsh-autosuggestions
-  dirhistory
+  # dirhistory
 )
 
 

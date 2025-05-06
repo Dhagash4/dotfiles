@@ -13,11 +13,12 @@ alias ldd="tree -d -L 1"
 # alias cat="batcat"
 
 # Check if the OS is Unix-like
-if [[ $(uname)" == "Darwin" ]]; then
+
+if [[ $(uname) == "Darwin" ]]; then
   alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
   alias cat="bat"
 
-#directory alias
+  # Directory aliases
   alias paper="cd ~/projects/personal/papers_to_read"
   alias rgbd="cd ~/projects/personal/rgbd_dataloader"
   alias work="cd ~/projects/work"

@@ -75,8 +75,10 @@ Plug 'folke/zen-mode.nvim'
 "Neoformat
 Plug 'sbdchd/neoformat'
 
+" AutoClose tags HTML
+Plug 'AndrewRadev/tagalong.vim'
 "Remote development
-Plug 'amitds1997/remote-nvim.nvim', {'tag': 'v0.3.9'}
-Plug 'MunifTanjim/nui.nvim'
+"Plug 'amitds1997/remote-nvim.nvim', {'tag': 'v0.3.9'}
+"Plug 'MunifTanjim/nui.nvim'
 
 call plug#end()

@@ -124,3 +124,8 @@ nnoremap <leader>cn :cnext<CR>
 nnoremap <leader>cp :cprev<CR>
 nnoremap <leader>co :copen<CR>
 nnoremap <leader>cc :cclose<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => TagAlong modifications
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:tagalong_additional_filetypes = ['javascript']
