@@ -4,8 +4,8 @@
 # Fix zsh autocomplete in zsh
 # https://github.com/ros2/ros2cli/issues/534#issuecomment-957516107
 
+export ROS_DISTRO=humble 
 # Fix zsh autocomplete in zsh
-
 if [ -f /opt/ros/${ROS_DISTRO}/setup.zsh ]; then
   source /opt/ros/${ROS_DISTRO}/setup.zsh
   eval "$(register-python-argcomplete3 ros2)"

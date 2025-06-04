@@ -20,7 +20,7 @@ let g:gruvbox_material_better_performance = 1
 let g:gruvbox_italicize_comments = 1
 let g:gruvbox_italicize_strings = 1
 
-colorscheme gruvbox
+colorscheme gruvbox-material
 
 "--- Text, tab and indent related
 set smarttab
@@ -48,7 +48,7 @@ nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
 
 " Always move down with vim keys even in soft-lines
-noremap < expr> j v:count ? 'j' : 'gj'
+noremap <expr> j v:count ? 'j' : 'gj'
 noremap <expr> k v:count ? 'k' : 'gk'
 
 " Toggle highlight when <leader><cr> is pressed
@@ -63,7 +63,7 @@ map <silent><C-p> "0p
 """"""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""
 set foldmethod=expr
-set foldexpr=v:lua.vim.treesitter.foldexpr()
+set foldexpr=nvim_treesitter#foldexpr()
 set nofoldenable
 set foldlevel=99
 set foldtext=""

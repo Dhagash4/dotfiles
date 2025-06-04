@@ -10,12 +10,9 @@
 	process = git-lfs filter-process
 	required = true
 
-[credential "https://git.overleaf.com"]
-	username = dhagash.1@iitj.ac.in
-
 [core]
 	editor = nvim
-    pager =  diff-so-fancy | less --tabs=4 -RF
+  pager =  diff-so-fancy | less --tabs=4 -RF
 
 [merge]
 	tool = meld
@@ -26,16 +23,19 @@
 [init]
     defaultBranch = main
 
-[user]
-	email = desai.dhagash@gmail.com
-	name = Dhagash Desai
+; [user]
+; 	email = desai.dhagash@gmail.com
+; 	name = Dhagash Desai
+
 [color]
 	ui = true
+
 [color "diff-highlight"]
 	oldNormal = red bold
 	oldHighlight = red bold 52
 	newNormal = green bold
 	newHighlight = green bold 22
+
 [color "diff"]
 	meta = 11
 	frag = magenta bold
@@ -44,7 +44,9 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+
 [mergetool "meld"]
 	path = /usr/bin/meld
+
 [mergetool]
 	keepBackup = false

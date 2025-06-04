@@ -1,48 +1,35 @@
-// {
-//   // Python
-//   "python.formatting.provider": "black",
-//   "python.linting.pylintEnabled": false,
-//   // C++
-//   "clangd.enabled": true,
-//   "clangd.compilationDatabaseCandidates": [
-//     "${workspaceFolder/build/}",
-//     "${workspaceFolder}"
-//   ],
-//   "clangd.arguments": [
-//     "--background-index",
-//     "--clang-tidy",
-//     "--inlay-hints=false"
-//   ],
-//   "clangd.path": "/usr/bin/clangd",
-//   // LaTex
-//   "coc.source.vimtex.filetypes": [
-//     "tex"
-//   ],
-//   "coc.source.word.filetypes": [
-//     "latex",
-//     "markdown"
-//   ],
-//   // Coc preferences
-//   "coc.source.file.ignoreHidden": false,
-//   "coc.preferences.useQuickfixForLocations": true,
-//   "coc.preferences.formatOnSave": true,
-//   "inlayHint.enable": false,
-//   "diagnostic.enable": true,
-//   "snippets.ultisnips.pythonPrompt": false,
-//   "snippets.extends": {
-//     "javascriptreact": [
-//       "react"
-//     ],
-//     "typescriptreact": [
-//       "react"
-//     ]
-//   }
-//   // "coc.preferences.formatOnSaveFiletypes": ["python","cpp"],
-// }
 {
+  // Global
+  "coc.preferences.useQuickfixForLocations": true,
+
+  // Enable global formatOnSave
+  "coc.preferences.formatOnSave": true,
+
+  // Language-specific overrides
+  "[python]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[cpp]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[c]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[tex]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[markdown]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[cmake]": {
+    "coc.preferences.formatOnSave": false
+  },
+
   // Python
   "python.formatting.provider": "black",
   "python.linting.pylintEnabled": false,
+  "pyright.enable": false,
+
   // C++
   "clangd.enabled": true,
   "clangd.compilationDatabaseCandidates": [
@@ -52,29 +39,19 @@
   "clangd.arguments": [
     "--background-index",
     "--clang-tidy",
-    "--inlay-hints=false"
+    "--inlay-hints=false",
+    "--query-driver=/usr/bin/c++",
+    "--all-scopes-completion",
+    "--pch-storage=memory",
+    "--log=verbose"
   ],
+  "clangd.fallbackFlags": ["-std=c++14"],
   "clangd.path": "/usr/bin/clangd",
+
   // LaTeX
   "coc.source.vimtex.filetypes": ["tex"],
   "coc.source.word.filetypes": ["latex", "markdown"],
-  // ESLint & Prettier (React Development)
-  "eslint.autoFixOnSave": true,
-  "prettier.enable": true,
-  // TypeScript & JavaScript Configs
-  "tsserver.enable": true,
-  "javascript.suggestionActions.enabled": true,
-  "typescript.suggestionActions.enabled": true,
-  // Coc Preferences
-  "coc.preferences.useQuickfixForLocations": true,
-  "coc.preferences.formatOnSave": true,
-  // Snippets and Extensions
-  "snippets.ultisnips.pythonPrompt": false,
-  "snippets.extends": {
-    "javascript": ["react"],
-    "typescript": ["react"]
-  },
-  // Inlay hints and diagnostics
-  "inlayHint.enable": false,
-  "diagnostic.enable": true
+
+  // Snippets
+  "snippets.ultisnips.pythonPrompt": false
 }

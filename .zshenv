@@ -5,6 +5,7 @@ export LC_ALL=en_US.UTF-8
 
 # Others
 export EDITOR='nvim'
+export PATH="$PATH:/opt/nvim/"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

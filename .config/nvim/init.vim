@@ -77,8 +77,7 @@ Plug 'sbdchd/neoformat'
 
 " AutoClose tags HTML
 Plug 'AndrewRadev/tagalong.vim'
-"Remote development
-"Plug 'amitds1997/remote-nvim.nvim', {'tag': 'v0.3.9'}
-"Plug 'MunifTanjim/nui.nvim'
 
+" Copilot
+" Plug 'github/copilot.vim'
 call plug#end()

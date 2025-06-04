@@ -4,6 +4,7 @@ let g:coc_snippet_prev = '<S-tab>'
 let g:coc_config_home='$HOME/.config/nvim/plugin/coc'
 let g:coc_global_extensions = [
       \'coc-clangd',
+      \'coc-git',
       \'coc-docker',
       \'coc-cmake',
       \'coc-emoji',
@@ -12,6 +13,7 @@ let g:coc_global_extensions = [
       \'coc-lua',
       \'coc-markdownlint',
       \'coc-pyright',
+      \'coc-python',
       \'coc-snippets',
       \'coc-vimlsp',
       \'coc-vimtex',
