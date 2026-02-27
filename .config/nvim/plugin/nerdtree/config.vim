@@ -10,3 +10,6 @@ autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTa
 
 "--Show hidden files
 let NERDTreeShowHidden=1
+
+"--Change CWD when tree root changes (fixes Telescope using old directory)
+let g:NERDTreeChDirMode=2

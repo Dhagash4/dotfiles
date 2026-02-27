@@ -1,32 +1,33 @@
-require 'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all" (the listed parsers MUST always be installed)
-  ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "cpp", "python", "yaml",
-    "dockerfile", "gitignore", "cmake", "javascript", "html", "typescript", "css", "scss", "tsx", "json", "toml" },
+require('nvim-treesitter').setup {
+  -- Parsers to install
+  install = {
+    "c", "cpp", "lua", "vim", "vimdoc", "query",
+    "markdown", "markdown_inline",
+    "python", "yaml",
+    "dockerfile", "gitignore", "cmake",
+    "javascript", "typescript", "tsx",
+    "html", "css", "scss", "json", "toml"
+  },
 
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = true,
+  -- Install parsers synchronously
+  sync_install = false, -- safer to install asynchronously on old systems
 
   -- Automatically install missing parsers when entering buffer
-  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
   auto_install = true,
 
-  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+  -- Prefer prebuilt binaries (skip building from source)
+  parser_install_dir = nil, -- default
+  prefer_git = false,       -- disables cloning from Git
+  prefer_local = false,     -- disables local build
 
+  -- Highlighting configuration
   highlight = {
     enable = true,
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
-  folding = {
+
+  -- Indentation configuration
+  indent = {
     enable = true,
-    -- Setting this to true will fold based on the treesitter parser
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_folding = false,
   },
 }

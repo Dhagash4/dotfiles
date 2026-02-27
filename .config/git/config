@@ -50,3 +50,6 @@
 
 [mergetool]
 	keepBackup = false
+[user]
+	name = Dhagash Desai
+	email = desai.dhagash@gmail.com

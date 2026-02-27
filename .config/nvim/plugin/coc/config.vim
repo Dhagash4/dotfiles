@@ -13,7 +13,6 @@ let g:coc_global_extensions = [
       \'coc-lua',
       \'coc-markdownlint',
       \'coc-pyright',
-      \'coc-python',
       \'coc-snippets',
       \'coc-vimlsp',
       \'coc-vimtex',

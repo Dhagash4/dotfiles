@@ -10,7 +10,6 @@ alias rz="source ~/.zshrc"
 alias ca="source ~/anaconda3/bin/activate"
 alias da="conda deactivate"
 alias ldd="tree -d -L 1"
-# alias cat="batcat"
 
 # Check if the OS is Unix-like
 
@@ -25,7 +24,3 @@ if [[ $(uname) == "Darwin" ]]; then
 else
   alias cat="batcat"
 fi
-
-#kitty aliases
-alias ssh="kitten ssh"
-
