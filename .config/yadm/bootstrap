@@ -1,0 +1,20 @@
+#!/bin/bash
+# Orchestrates a fresh-machine setup. Run automatically by `yadm clone --bootstrap`.
+set -e
+
+YADM_DIR="$(dirname "$(realpath "$0")")"
+# shellcheck source=/dev/null
+source "$YADM_DIR/functions.sh"
+
+install_packages || true
+install_gui      || true
+install_ohmyzsh  || true
+install_nvim     || true
+install_vscode   || true
+
+# Fonts: yadm symlinks the OS-appropriate variant to install_fonts.sh.
+if [ -x "$HOME/.config/fonts/install_fonts.sh" ]; then
+  "$HOME/.config/fonts/install_fonts.sh" || true
+fi
+
+echo "Bootstrap complete. Run 'exec zsh' (or open a new terminal) to load everything."
