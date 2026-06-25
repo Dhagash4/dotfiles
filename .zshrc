@@ -27,9 +27,9 @@ plugins=(
 
 command -v thefuck >/dev/null 2>&1 && eval "$(thefuck --alias)"
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[ -x /home/linuxbrew/.linuxbrew/bin/brew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 export PATH="/usr/bin:$PATH"
-eval "$(zoxide init zsh)"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.aliases.zsh

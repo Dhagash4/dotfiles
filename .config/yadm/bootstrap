@@ -2,7 +2,7 @@
 # Orchestrates a fresh-machine setup. Run automatically by `yadm clone --bootstrap`.
 set -e
 
-YADM_DIR="$(dirname "$(realpath "$0")")"
+YADM_DIR="$HOME/.config/yadm"
 # shellcheck source=/dev/null
 source "$YADM_DIR/functions.sh"
 
