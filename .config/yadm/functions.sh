@@ -45,6 +45,25 @@ install_gui() {
     sudo apt update && sudo apt install -y wezterm
   fi
 }
-install_ohmyzsh()  { echo "TODO task 4"; }
+install_ohmyzsh() {
+  export RUNZSH=no KEEP_ZSHRC=yes CHSH=no
+  export ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
+  if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  fi
+
+  git clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions \
+    "$ZSH_CUSTOM/plugins/zsh-autosuggestions" 2>/dev/null || true
+  git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting \
+    "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" 2>/dev/null || true
+  git clone --depth 1 https://github.com/Aloxaf/fzf-tab \
+    "$ZSH_CUSTOM/plugins/fzf-tab" 2>/dev/null || true
+
+  # Make zsh the default shell.
+  if [ "$(basename "${SHELL:-}")" != "zsh" ] && command -v zsh >/dev/null 2>&1; then
+    sudo chsh -s "$(command -v zsh)" "$USER" 2>/dev/null || chsh -s "$(command -v zsh)" || true
+  fi
+}
 install_nvim()     { echo "TODO task 5"; }
 install_vscode()   { echo "TODO task 6"; }
