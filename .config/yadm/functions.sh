@@ -94,4 +94,20 @@ install_nvim() {
     nvim --headless -c "CocInstall -sync $exts" +qall 2>/dev/null || true
   fi
 }
-install_vscode()   { echo "TODO task 6"; }
+install_vscode() {
+  command -v code >/dev/null 2>&1 || return 0
+
+  # macOS stores user config under Library; point it at the tracked path.
+  if _is_mac; then
+    mac_dir="$HOME/Library/Application Support/Code/User"
+    if [ ! -L "$mac_dir" ]; then
+      rm -rf "$mac_dir"
+      mkdir -p "$HOME/Library/Application Support/Code"
+      ln -s "$HOME/.config/Code/User" "$mac_dir"
+    fi
+  fi
+
+  while read -r ext; do
+    [ -n "$ext" ] && code --install-extension "$ext" --force || true
+  done < "$YADM_DIR/vscode-extensions.txt"
+}

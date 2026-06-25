@@ -1,0 +1,52 @@
+{
+    "editor.fontSize": 14,
+    "window.zoomLevel": 1,
+    "claudeCode.preferredLocation": "panel",
+    "editor.fontFamily": "'SFMono Nerd Font', monospace",
+    // Disable C++ IntelliSense
+    "C_Cpp.intelliSenseEngine": "disabled",
+    // Enable format on paste and save
+    "editor.formatOnPaste": true,
+    // clangd settings
+    "clangd.arguments": [
+        "--background-index",
+        "--clang-tidy",
+        "--completion-style=detailed",
+        "--header-insertion=never",
+        "--pch-storage=memory",
+        "--compile-commands-dir=${workspaceFolder}"
+    ],
+    "clangd.fallbackFlags": [
+        "-std=c++17"
+    ],
+    "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+    "editor.minimap.enabled": false,
+    // C++ formatting with clang-format
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true
+    },
+    "[c]": {
+        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true
+    },
+    // clang-format executable path (uses system clang-format by default)
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+        "cmake": true,
+        "cpp": true
+    },
+    "terminal.integrated.suggest.providers": {
+        "lsp": false,
+        "vscode.terminal-suggest": false
+    },
+    "editor.inlayHints.enabled": "off",
+    "workbench.colorTheme": "Gruvbox Dark Medium",
+    "githubPullRequests.pullBranch": "never"
+}
