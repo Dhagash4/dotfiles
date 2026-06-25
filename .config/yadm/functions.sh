@@ -21,7 +21,30 @@ install_packages() {
     _apt_install_each "$YADM_DIR/linux_packages"
   fi
 }
-install_gui()      { echo "TODO task 3"; }
+install_gui() {
+  if _is_mac; then
+    _brew_cask_each "$YADM_DIR/macos_casks"
+    return 0
+  fi
+
+  # Linux: add official apt repos, then install. Idempotent via command -v guards.
+  if ! command -v code >/dev/null 2>&1; then
+    sudo apt install -y wget gpg apt-transport-https
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc \
+      | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft.gpg >/dev/null
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
+      | sudo tee /etc/apt/sources.list.d/vscode.list >/dev/null
+    sudo apt update && sudo apt install -y code
+  fi
+
+  if ! command -v wezterm >/dev/null 2>&1; then
+    curl -fsSL https://apt.fury.io/wez/gpg.key \
+      | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
+    echo "deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *" \
+      | sudo tee /etc/apt/sources.list.d/wezterm.list >/dev/null
+    sudo apt update && sudo apt install -y wezterm
+  fi
+}
 install_ohmyzsh()  { echo "TODO task 4"; }
 install_nvim()     { echo "TODO task 5"; }
 install_vscode()   { echo "TODO task 6"; }
