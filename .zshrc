@@ -16,7 +16,6 @@ ZSH_TMUX_AUTOSTART="false"
 export ZSH="$HOME/.oh-my-zsh"
 plugins=(
   git
-	z
   copypath
   fzf
 	fzf-tab
@@ -26,19 +25,23 @@ plugins=(
   zsh-autosuggestions
 )
 
-source $ZSH/oh-my-zsh.sh
-source $HOME/.aliases.zsh
-source $HOME/.aliases_work.zsh
-source $HOME/.functions.zsh
-source $HOME/.zsh_work
-source $HOME/.ros.sh
-
-eval $(thefuck --alias)
+command -v thefuck >/dev/null 2>&1 && eval "$(thefuck --alias)"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+export PATH="/usr/bin:$PATH"
+eval "$(zoxide init zsh)"
+
+source $ZSH/oh-my-zsh.sh
+source $HOME/.aliases.zsh
+[ -f $HOME/.aliases_work.zsh ] && source $HOME/.aliases_work.zsh
+source $HOME/.functions.zsh
+[ -f $HOME/.zsh_work ] && source $HOME/.zsh_work
+source $HOME/.ros.sh
+[ -f $HOME/dev/ros2-aliases/ros2_utils.zsh ] && source $HOME/dev/ros2-aliases/ros2_utils.zsh
 
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+export PATH="$HOME/.local/bin:$PATH"
