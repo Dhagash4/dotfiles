@@ -1,0 +1,18 @@
+#!/bin/bash
+# Install SFMono Nerd Font on Linux (epk patch — same family used by wezterm + VS Code).
+set -e
+if fc-list 2>/dev/null | grep -qi "SFMono"; then
+  echo "SFMono Nerd Font already installed."
+  exit 0
+fi
+ver="18.0d1e1.0"
+tmp="$(mktemp -d)"
+curl -fsSL -o "$tmp/sfmono.tar.gz" \
+  "https://github.com/epk/SF-Mono-Nerd-Font/archive/refs/tags/v${ver}.tar.gz"
+tar -xzf "$tmp/sfmono.tar.gz" -C "$tmp"
+mkdir -p "$HOME/.local/share/fonts"
+cp "$tmp/SF-Mono-Nerd-Font-${ver}/"*.otf "$HOME/.local/share/fonts/" 2>/dev/null || \
+  cp -r "$tmp/SF-Mono-Nerd-Font-${ver}/"* "$HOME/.local/share/fonts/"
+fc-cache -f "$HOME/.local/share/fonts" >/dev/null
+rm -rf "$tmp"
+echo "SFMono Nerd Font installed."

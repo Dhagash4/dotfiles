@@ -1,0 +1,9 @@
+#!/bin/bash
+# Install SFMono Nerd Font on macOS via the epk Homebrew tap.
+set -e
+if brew list --cask font-sf-mono-nerd-font >/dev/null 2>&1; then
+  echo "SFMono Nerd Font already installed."
+  exit 0
+fi
+brew tap epk/epk
+brew install --cask font-sf-mono-nerd-font
