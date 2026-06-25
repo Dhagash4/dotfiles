@@ -65,5 +65,33 @@ install_ohmyzsh() {
     sudo chsh -s "$(command -v zsh)" "$USER" 2>/dev/null || chsh -s "$(command -v zsh)" || true
   fi
 }
-install_nvim()     { echo "TODO task 5"; }
+install_nvim() {
+  if _is_mac; then
+    brew install neovim || true
+  elif ! command -v nvim >/dev/null 2>&1; then
+    # Latest stable prebuilt release tarball -> /usr/local (matches current install).
+    tmp="$(mktemp -d)"
+    curl -fsSL -o "$tmp/nvim.tar.gz" \
+      https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    sudo tar -C /usr/local -xzf "$tmp/nvim.tar.gz"
+    sudo ln -sf /usr/local/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+    rm -rf "$tmp"
+  fi
+
+  # node via nvm (coc.nvim needs node); matches current nvm-based setup.
+  export NVM_DIR="$HOME/.nvm"
+  if [ ! -s "$NVM_DIR/nvm.sh" ]; then
+    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  fi
+  # shellcheck source=/dev/null
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  command -v nvm >/dev/null 2>&1 && nvm install --lts >/dev/null 2>&1 || true
+
+  # vim-plug plugins, then coc extensions declared in g:coc_global_extensions.
+  nvim --headless +PlugInstall +qall 2>/dev/null || true
+  exts="$(nvim --headless -c 'echo join(get(g:,"coc_global_extensions",[]), " ")' +qa 2>&1 | tr -d '\r')"
+  if [ -n "$exts" ]; then
+    nvim --headless -c "CocInstall -sync $exts" +qall 2>/dev/null || true
+  fi
+}
 install_vscode()   { echo "TODO task 6"; }
