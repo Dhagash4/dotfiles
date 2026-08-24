@@ -1,0 +1,3 @@
+# dconf dump of /org/gnome/desktop/peripherals/ — regenerate with ~/.config/gnome/dump.sh
+[keyboard]
+numlock-state=true

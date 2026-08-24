@@ -1,0 +1,22 @@
+# dconf dump of /org/gnome/shell/ — regenerate with ~/.config/gnome/dump.sh
+[/]
+enabled-extensions=['ding@rastersoft.com', 'ubuntu-appindicators@ubuntu.com', 'ubuntu-dock@ubuntu.com', 'openbar@neuromorph', 'hidetopbar@mathieu.bidon.ca']
+favorite-apps=['google-chrome.desktop', 'org.wezfurlong.wezterm.desktop', 'code.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop']
+
+[extensions/dash-to-dock]
+autohide=true
+dock-fixed=false
+dock-position='BOTTOM'
+extend-height=false
+intellihide=true
+intellihide-mode='ALL_WINDOWS'
+
+[extensions/hidetopbar]
+enable-intellihide=true
+mouse-sensitive=true
+
+[extensions/openbar]
+bartype='Trilands'
+bg-change=false
+bwidth=0.0
+neon=false

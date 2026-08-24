@@ -173,6 +173,55 @@ install_fonts() {
   fi
   bash "$script"
 }
+# PlotJuggler 4 ships only as a GitHub release (no apt repo, and the Ubuntu archive
+# has nothing). The .deb drops a self-contained Qt build in /opt/plotjuggler4 with no
+# /usr/bin symlink and no .desktop entry, which is why .aliases.zsh defines `pj4`.
+install_plotjuggler() {
+  if _is_mac; then
+    echo "no PlotJuggler build published for macOS; skipping."
+    return 0
+  fi
+
+  if [ -x /opt/plotjuggler4/bin/plotjuggler4 ]; then
+    echo "plotjuggler4 already installed."
+    return 0
+  fi
+
+  url="$(curl -fsSL https://api.github.com/repos/facontidavide/PlotJuggler/releases/latest \
+    | grep -o 'https://[^"]*plotjuggler4_[^"]*_amd64\.deb' | head -1)"
+  if [ -z "$url" ]; then
+    echo "could not find a plotjuggler4 .deb in the latest release." >&2
+    return 1
+  fi
+
+  tmp="$(mktemp -d)"
+  if ! curl -fsSL -o "$tmp/plotjuggler4.deb" "$url"; then
+    rm -rf "$tmp"; echo "could not download $url" >&2; return 1
+  fi
+  # `apt install ./file.deb` rather than `dpkg -i` so the dependencies come along.
+  if ! sudo apt install -y "$tmp/plotjuggler4.deb"; then
+    rm -rf "$tmp"; echo "plotjuggler4 install failed." >&2; return 1
+  fi
+  rm -rf "$tmp"
+
+  [ -x /opt/plotjuggler4/bin/plotjuggler4 ] || { echo "plotjuggler4 missing after install." >&2; return 1; }
+  echo "plotjuggler4 installed (run it with the pj4 alias)."
+}
+# Desktop settings (dock position, top bar, extensions, keyboard) live as dconf dumps
+# under ~/.config/gnome. Re-capture them with ~/.config/gnome/dump.sh after tweaking the
+# desktop, then commit — that is what keeps a fresh machine from needing a manual pass.
+install_gnome_desktop() {
+  if _is_mac; then
+    return 0
+  fi
+
+  script="$HOME/.config/gnome/apply.sh"
+  if [ ! -e "$script" ]; then
+    echo "missing $script" >&2
+    return 1
+  fi
+  bash "$script"
+}
 install_vscode() {
   command -v code >/dev/null 2>&1 || return 0
 

@@ -1,6 +1,7 @@
 build-essential
 curl
 fd-find
+flameshot
 fontconfig
 thefuck
 unzip

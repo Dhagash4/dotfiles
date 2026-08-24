@@ -1,0 +1,5 @@
+# GNOME Shell extensions pulled from extensions.gnome.org, one UUID per line.
+# Distro-shipped ones (ding, ubuntu-*, pop-shell, cosmic-*) are NOT listed here — they
+# come from the distro's own packages and apply.sh just enables whichever are present.
+openbar@neuromorph
+hidetopbar@mathieu.bidon.ca
