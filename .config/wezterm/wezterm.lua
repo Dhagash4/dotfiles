@@ -69,7 +69,7 @@ config.colors = {
 
 -- Tabs show their number only. The title was three bars' worth of noise stacked with
 -- tmux's status line and airline; the index is the part actually used to switch tabs.
--- Flat blocks separated by a gap of bar background, i3-style -- no powerline divider,
+-- Flat blocks butted straight against each other, i3-style -- no powerline divider,
 -- so no glyph whose slant has to line up with the next tab's colour.
 wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, _max_width)
   local is_active = tab.is_active
@@ -77,13 +77,9 @@ wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, _max
   local tab_fg = is_active and active_fg or (hover and hover_fg or inactive_fg)
 
   return {
-    { Background = { Color = bg } },
-    { Text = ' ' },
     { Background = { Color = tab_bg } },
     { Foreground = { Color = tab_fg } },
     { Text = '  ' .. tostring(tab.tab_index + 1) .. '  ' },
-    { Background = { Color = bg } },
-    { Text = ' ' },
   }
 end)
 
