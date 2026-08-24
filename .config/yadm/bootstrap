@@ -25,7 +25,9 @@ run_step install_gui
 run_step install_ohmyzsh
 run_step install_nvim
 run_step install_claude
+run_step install_claude_plugins
 run_step install_vscode
+run_step install_formatters
 run_step install_fonts
 run_step install_keyd
 run_step install_plotjuggler

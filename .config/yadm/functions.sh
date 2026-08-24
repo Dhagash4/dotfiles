@@ -222,8 +222,74 @@ install_gnome_desktop() {
   fi
   bash "$script"
 }
+# Claude Code plugins. The install state lives in ~/.claude/plugins, which is machine
+# -local (absolute paths, resolved versions), so track two plain lists instead and replay
+# them. Regenerate after adding plugins:
+#   claude plugin list | grep -oE '[a-z0-9-]+@[a-z-]+' | sort -u   > claude-plugins
+# and add any new marketplace to claude-marketplaces.
+install_claude_plugins() {
+  _claude_present || { echo "claude not installed; skipping plugins." >&2; return 1; }
+  cmd="$(command -v claude || echo "$HOME/.local/bin/claude")"
+
+  plugins="$YADM_DIR/claude-plugins"
+  markets="$YADM_DIR/claude-marketplaces"
+  for f in "$plugins" "$markets"; do
+    [ -e "$f" ] || { echo "missing $f" >&2; return 1; }
+  done
+
+  # Marketplaces first: a plugin only resolves once its marketplace is configured.
+  while read -r name source; do
+    case "${name%%#*}" in "") continue ;; esac
+    [ -n "$source" ] || continue
+    "$cmd" plugin marketplace list 2>/dev/null | grep -q "$name" && continue
+    "$cmd" plugin marketplace add "$source" || echo "  !! could not add marketplace $name" >&2
+  done < "$markets"
+
+  failed=""
+  while read -r entry; do
+    entry="${entry%%#*}"; entry="$(echo "$entry" | tr -d '[:space:]')"
+    [ -n "$entry" ] || continue
+    # -y is required anyway when stdout is not a TTY, which is the case under bootstrap.
+    if "$cmd" plugin install "$entry" -y --scope user >/dev/null 2>&1; then
+      echo "  $entry"
+    else
+      failed="$failed $entry"
+    fi
+  done < "$plugins"
+
+  if [ -n "$failed" ]; then
+    echo "could not install:$failed" >&2
+    return 1
+  fi
+  echo "claude plugins installed (restart claude to load them)."
+}
+# Formatters neoformat drives. clang-format and shfmt come from the package lists;
+# these three are pip-only or hopelessly stale there (apt ships black 21.12b0, which
+# formats differently enough to churn every file it touches).
+install_formatters() {
+  if _is_mac; then
+    for f in black isort docformatter; do brew install "$f" || true; done
+    return 0
+  fi
+
+  command -v pip3 >/dev/null 2>&1 || sudo apt install -y python3-pip || return 1
+  # --user keeps them out of the system python; .zshrc already has ~/.local/bin on PATH.
+  pip3 install --user --upgrade black isort docformatter || return 1
+
+  missing=""
+  for f in black isort docformatter; do
+    [ -x "$HOME/.local/bin/$f" ] || command -v "$f" >/dev/null 2>&1 || missing="$missing $f"
+  done
+  [ -z "$missing" ] || { echo "formatters missing after install:$missing" >&2; return 1; }
+  echo "python formatters installed."
+}
 install_vscode() {
-  command -v code >/dev/null 2>&1 || return 0
+  # Returning 0 here is what hid a whole missing extension set: bootstrap reported
+  # success while installing nothing, because install_gui had failed earlier.
+  if ! command -v code >/dev/null 2>&1; then
+    echo "code is not on PATH (did install_gui fail?)" >&2
+    return 1
+  fi
 
   # macOS stores user config under Library; point it at the tracked path.
   if _is_mac; then
@@ -235,7 +301,15 @@ install_vscode() {
     fi
   fi
 
+  failed=""
   while read -r ext; do
-    [ -n "$ext" ] && code --install-extension "$ext" --force || true
+    [ -n "$ext" ] || continue
+    code --install-extension "$ext" --force >/dev/null 2>&1 || failed="$failed $ext"
   done < "$YADM_DIR/vscode-extensions.txt"
+
+  if [ -n "$failed" ]; then
+    echo "could not install extensions:$failed" >&2
+    return 1
+  fi
+  echo "vscode extensions installed."
 }
