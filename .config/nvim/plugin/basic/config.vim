@@ -14,6 +14,9 @@ let g:airline_left_sep = ''
 let g:airline_powerline_fonts=1
 
 " --- THEME ---
+" 24-bit colour. Without this nvim emits 256-colour codes regardless of what the
+" terminal supports, which is what made gruvbox-material look washed out under tmux.
+set termguicolors
 set background=dark
 let g:gruvbox_material_background = 'dark'
 let g:gruvbox_material_better_performance = 1
