@@ -153,6 +153,9 @@ install_keyd() {
   sudo mkdir -p /etc/keyd
   sudo ln -sfn "$HOME/.config/keyboard/keyd.conf" /etc/keyd/default.conf
 
+  # `make install` drops a fresh unit into /usr/local/lib/systemd/system; without a
+  # reload systemctl can still report it as not found.
+  sudo systemctl daemon-reload
   sudo systemctl enable keyd || { echo "could not enable keyd.service." >&2; return 1; }
   sudo systemctl restart keyd || { echo "could not start keyd.service." >&2; return 1; }
 
