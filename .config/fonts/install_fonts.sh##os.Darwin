@@ -1,9 +1,23 @@
 #!/bin/bash
 # Install SFMono Nerd Font on macOS via the epk Homebrew tap.
-set -e
-if brew list --cask font-sf-mono-nerd-font >/dev/null 2>&1; then
+set -euo pipefail
+
+CASK="font-sf-mono-nerd-font"
+
+die() { echo "ERROR: $*" >&2; exit 1; }
+
+# Homebrew casks drop font files into ~/Library/Fonts. Check the files rather than
+# trusting the cask receipt alone, so a half-removed install reinstalls cleanly.
+font_present() { compgen -G "$HOME/Library/Fonts/SFMono*Nerd Font*" >/dev/null 2>&1; }
+
+if brew list --cask "$CASK" >/dev/null 2>&1 && font_present; then
   echo "SFMono Nerd Font already installed."
   exit 0
 fi
+
+command -v brew >/dev/null 2>&1 || die "Homebrew is required to install $CASK."
 brew tap epk/epk
-brew install --cask font-sf-mono-nerd-font
+brew install --cask "$CASK" || die "brew install --cask $CASK failed."
+
+font_present || die "$CASK installed but no SFMono Nerd Font files in ~/Library/Fonts."
+echo "SFMono Nerd Font installed."

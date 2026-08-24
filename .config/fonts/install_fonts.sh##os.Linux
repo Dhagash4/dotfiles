@@ -1,18 +1,62 @@
 #!/bin/bash
 # Install SFMono Nerd Font on Linux (epk patch — same family used by wezterm + VS Code).
-set -e
-if fc-list 2>/dev/null | grep -qi "SFMono"; then
-  echo "SFMono Nerd Font already installed."
+#
+# WezTerm and VS Code ask for the patched family name, "SFMono Nerd Font". If the
+# font is missing, or is on disk but not registered with fontconfig, WezTerm falls
+# back and prints "Unable to load a font specified by your font=..." on every launch.
+set -euo pipefail
+
+FAMILY="SFMono Nerd Font"
+VER="18.0d1e1.0"
+FONT_DIR="$HOME/.local/share/fonts"
+
+die() { echo "ERROR: $*" >&2; exit 1; }
+
+# fc-cache/fc-list ship in the `fontconfig` package. Apps like wezterm depend only
+# on `libfontconfig1` — the shared library, which ships no binaries — so a fresh
+# minimal/server/WSL Ubuntu can run wezterm and still have no fc-cache. Without it
+# the fonts get copied but never registered, which is exactly the "unknown font" error.
+if ! command -v fc-cache >/dev/null 2>&1; then
+  echo "fontconfig (fc-cache) is missing; installing it."
+  sudo apt-get install -y fontconfig \
+    || { sudo apt-get update && sudo apt-get install -y fontconfig; } \
+    || die "could not install fontconfig; install it and re-run this script."
+fi
+
+# Match the full patched family: the glyphs WezTerm wants live only in the Nerd Font
+# build, so a partial match must not let an unpatched SF Mono satisfy the check.
+has_family() { fc-list -f '%{family}\n' 2>/dev/null | grep -qiF "$FAMILY"; }
+
+if has_family; then
+  echo "$FAMILY already installed."
   exit 0
 fi
-ver="18.0d1e1.0"
+
 tmp="$(mktemp -d)"
-curl -fsSL -o "$tmp/sfmono.tar.gz" \
-  "https://github.com/epk/SF-Mono-Nerd-Font/archive/refs/tags/v${ver}.tar.gz"
-tar -xzf "$tmp/sfmono.tar.gz" -C "$tmp"
-mkdir -p "$HOME/.local/share/fonts"
-cp "$tmp/SF-Mono-Nerd-Font-${ver}/"*.otf "$HOME/.local/share/fonts/" 2>/dev/null || \
-  cp -r "$tmp/SF-Mono-Nerd-Font-${ver}/"* "$HOME/.local/share/fonts/"
-fc-cache -f "$HOME/.local/share/fonts" >/dev/null
-rm -rf "$tmp"
-echo "SFMono Nerd Font installed."
+trap 'rm -rf "$tmp"' EXIT
+
+url="https://github.com/epk/SF-Mono-Nerd-Font/archive/refs/tags/v${VER}.tar.gz"
+echo "Downloading $FAMILY ${VER}..."
+curl -fsSL -o "$tmp/sfmono.tar.gz" "$url" || die "download failed: $url"
+tar -xzf "$tmp/sfmono.tar.gz" -C "$tmp" || die "could not extract the font archive."
+
+# GitHub strips the leading "v" from the tag for the archive's top-level directory.
+src="$tmp/SF-Mono-Nerd-Font-${VER}"
+[ -d "$src" ] || src="$(find "$tmp" -mindepth 1 -maxdepth 1 -type d | head -1)"
+
+mkdir -p "$FONT_DIR"
+# Copy only the fonts — the archive also carries a README and a screenshot.
+found=0
+while IFS= read -r -d '' otf; do
+  install -m 644 "$otf" "$FONT_DIR/"
+  found=$((found + 1))
+done < <(find "$src" -type f \( -iname '*.otf' -o -iname '*.ttf' \) -print0)
+[ "$found" -gt 0 ] || die "no font files found in the archive; upstream layout may have changed."
+echo "Installed $found font files to $FONT_DIR."
+
+fc-cache -f "$FONT_DIR" >/dev/null || die "fc-cache failed; fonts are in $FONT_DIR but unregistered."
+
+# Verify, rather than assume: this is the check whose absence let the broken state
+# reach WezTerm silently.
+has_family || die "$FAMILY still not visible to fontconfig. Check 'fc-list | grep -i sfmono'."
+echo "$FAMILY installed and registered."

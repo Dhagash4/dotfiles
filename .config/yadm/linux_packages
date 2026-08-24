@@ -1,6 +1,7 @@
 build-essential
 curl
 fd-find
+fontconfig
 thefuck
 unzip
 xclip

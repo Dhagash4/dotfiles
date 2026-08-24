@@ -16,8 +16,16 @@ and runs `.config/yadm/bootstrap`, which:
 - installs WezTerm and VS Code
 - installs oh-my-zsh and the zsh plugins
 - installs Neovim (latest stable), node (via nvm), vim-plug plugins, and coc extensions
+- installs the Claude Code CLI (`claude`)
 - installs VS Code extensions (`.config/yadm/vscode-extensions.txt`)
-- installs the SFMono Nerd Font (used by WezTerm and VS Code)
+- installs the SFMono Nerd Font (used by WezTerm and VS Code) and verifies fontconfig can see it
+
+Each step runs even if an earlier one fails; any failures are listed at the end and the
+bootstrap exits non-zero. Re-run a single step with:
+
+```sh
+source ~/.config/yadm/functions.sh && install_fonts   # or install_claude, install_gui, ...
+```
 
 Work/machine-specific files (`.zsh_work`, `.aliases_work.zsh`, …) are not tracked and are
 sourced only if present.
@@ -29,6 +37,21 @@ sourced only if present.
 - `.config/yadm/functions.sh` — the install steps
 - `.config/yadm/{packages,linux_packages,macos_packages,macos_casks}` — package manifests
 - `.config/fonts/install_fonts.sh##os.{Linux,Darwin}` — font installers (yadm OS-alternates)
+
+## Troubleshooting
+
+**WezTerm: "Unable to load a font specified by your font=wezterm.font('SFMono Nerd Font'...)"**
+
+The font is not registered with fontconfig. Install it and check:
+
+```sh
+source ~/.config/yadm/functions.sh && install_fonts
+fc-list -f '%{family}\n' | grep -i 'SFMono Nerd Font'
+```
+
+`fc-cache`/`fc-list` come from the `fontconfig` package, not from `libfontconfig1` that
+WezTerm itself depends on, so a minimal/server/WSL install can run WezTerm and still be
+unable to register fonts. `fontconfig` is in `.config/yadm/linux_packages` for that reason.
 
 ## Acknowledgements
 

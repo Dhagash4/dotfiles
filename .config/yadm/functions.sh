@@ -62,7 +62,7 @@ install_ohmyzsh() {
 
   # Make zsh the default shell.
   if [ "$(basename "${SHELL:-}")" != "zsh" ] && command -v zsh >/dev/null 2>&1; then
-    sudo chsh -s "$(command -v zsh)" "$USER" 2>/dev/null || chsh -s "$(command -v zsh)" || true
+    sudo chsh -s "$(command -v zsh)" "${USER:-$(id -un)}" 2>/dev/null || chsh -s "$(command -v zsh)" || true
   fi
 }
 install_nvim() {
@@ -93,6 +93,49 @@ install_nvim() {
   if [ -n "$exts" ]; then
     nvim --headless -c "CocInstall -sync $exts" +qall 2>/dev/null || true
   fi
+}
+# `claude` may not be on PATH yet in this non-interactive shell, so also look where
+# the native installer puts it.
+_claude_present() { command -v claude >/dev/null 2>&1 || [ -x "$HOME/.local/bin/claude" ]; }
+
+install_claude() {
+  if _claude_present; then
+    echo "claude already installed."
+    return 0
+  fi
+
+  # Official native installer; installs to ~/.local/bin, which .zshrc puts on PATH.
+  # Check the result rather than the pipeline's status: `curl | bash` reports bash's
+  # exit code, so a failed download would otherwise look like a success.
+  curl -fsSL https://claude.ai/install.sh | bash || true
+  if _claude_present; then
+    echo "claude installed (native)."
+    return 0
+  fi
+
+  # Fallback for platforms with no native build. Uses the node from install_nvim, so
+  # keep this step after it in the bootstrap order.
+  if command -v npm >/dev/null 2>&1; then
+    npm install -g @anthropic-ai/claude-code || true
+    if _claude_present; then
+      echo "claude installed (npm)."
+      return 0
+    fi
+  fi
+
+  echo "could not install claude (tried the native installer and npm)." >&2
+  return 1
+}
+install_fonts() {
+  # yadm symlinks the OS-appropriate variant to install_fonts.sh. Invoke it through
+  # bash rather than guarding on [ -x ]: a missing exec bit used to make the whole
+  # font step vanish without a word.
+  script="$HOME/.config/fonts/install_fonts.sh"
+  if [ ! -e "$script" ]; then
+    echo "missing $script (did 'yadm alt' run?)" >&2
+    return 1
+  fi
+  bash "$script"
 }
 install_vscode() {
   command -v code >/dev/null 2>&1 || return 0

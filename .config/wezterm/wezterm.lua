@@ -11,7 +11,15 @@ local config = wezterm.config_builder()
 -- config.initial_rows = 480
 
 -- or, changing the font size and color scheme.
-config.font = wezterm.font('SFMono Nerd Font')
+-- Prefer the patched SFMono (installed by ~/.config/fonts/install_fonts.sh); the
+-- fallbacks keep glyphs rendering on a machine where it is missing instead of
+-- leaving the terminal on whatever WezTerm picks by itself.
+config.font = wezterm.font_with_fallback {
+  'SFMono Nerd Font',
+  'Symbols Nerd Font Mono',
+  'DejaVu Sans Mono',
+  'monospace',
+}
 config.font_size = 16
 config.color_scheme = 'Gruvbox dark, medium (base16)'
 
