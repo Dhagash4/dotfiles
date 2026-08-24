@@ -49,7 +49,7 @@ for i = 1, 9 do
   })
 end
 
--- Gruvbox colors for powerline tab bar
+-- Gruvbox colors for the tab bar
 local bg = '#282828'
 local fg = '#ebdbb2'
 local active_bg = '#d65d0e'
@@ -58,8 +58,6 @@ local inactive_bg = '#3c3836'
 local inactive_fg = '#a89984'
 local hover_bg = '#504945'
 local hover_fg = '#ebdbb2'
-
-local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
 
 config.colors = {
   tab_bar = {
@@ -71,26 +69,21 @@ config.colors = {
 
 -- Tabs show their number only. The title was three bars' worth of noise stacked with
 -- tmux's status line and airline; the index is the part actually used to switch tabs.
-wezterm.on('format-tab-title', function(tab, tabs, _panes, _config, hover, _max_width)
+-- Flat blocks separated by a gap of bar background, i3-style -- no powerline divider,
+-- so no glyph whose slant has to line up with the next tab's colour.
+wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, _max_width)
   local is_active = tab.is_active
   local tab_bg = is_active and active_bg or (hover and hover_bg or inactive_bg)
   local tab_fg = is_active and active_fg or (hover and hover_fg or inactive_fg)
 
-  -- Determine background to the right of this tab
-  local next_tab = tabs[tab.tab_index + 2]
-  local right_bg = bg
-  if next_tab then
-    local next_active = next_tab.is_active
-    right_bg = next_active and active_bg or inactive_bg
-  end
-
   return {
+    { Background = { Color = bg } },
+    { Text = ' ' },
     { Background = { Color = tab_bg } },
     { Foreground = { Color = tab_fg } },
-    { Text = ' ' .. tostring(tab.tab_index + 1) .. ' ' },
-    { Background = { Color = right_bg } },
-    { Foreground = { Color = tab_bg } },
-    { Text = SOLID_RIGHT_ARROW },
+    { Text = '  ' .. tostring(tab.tab_index + 1) .. '  ' },
+    { Background = { Color = bg } },
+    { Text = ' ' },
   }
 end)
 
