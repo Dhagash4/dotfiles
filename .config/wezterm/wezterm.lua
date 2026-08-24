@@ -21,15 +21,33 @@ config.font = wezterm.font_with_fallback {
   'monospace',
 }
 config.font_size = 16
+-- Don't pop up a warning window when a glyph is missing from the font stack.
+config.warn_about_missing_glyphs = false
 config.color_scheme = 'Gruvbox dark, medium (base16)'
 
 config.enable_tab_bar = true
+-- One tab needs no tab bar; it is just another line of chrome to ignore.
+config.hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = true
-config.tab_max_width = 32
+config.tab_bar_at_bottom = false
+config.tab_max_width = 8
 config.adjust_window_size_when_changing_font_size = false
 config.window_decorations = "RESIZE"
 config.exit_behavior = 'Close'
+
+-- ALT+<n> jumps straight to tab n, matching the numbers the tab bar now shows.
+-- CTRL+SHIFT+<n> does this by default, but is a three-key stretch. Nothing else claims
+-- bare ALT+<digit>: tmux's M-1..M-5 layout keys sit behind the C-a prefix, nvim maps
+-- none, and GNOME uses SUPER+<n> for the dock. The one casualty is zsh's digit-argument
+-- (ESC-<n> numeric prefix), which WezTerm now swallows before the shell sees it.
+config.keys = {}
+for i = 1, 9 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = 'ALT',
+    action = wezterm.action.ActivateTab(i - 1),
+  })
+end
 
 -- Gruvbox colors for powerline tab bar
 local bg = '#282828'
@@ -51,12 +69,9 @@ config.colors = {
   },
 }
 
-wezterm.on('format-tab-title', function(tab, tabs, panes, _config, hover, max_width)
-  local title = tab.active_pane.title
-  if #title > max_width - 4 then
-    title = wezterm.truncate_right(title, max_width - 4) .. '…'
-  end
-
+-- Tabs show their number only. The title was three bars' worth of noise stacked with
+-- tmux's status line and airline; the index is the part actually used to switch tabs.
+wezterm.on('format-tab-title', function(tab, tabs, _panes, _config, hover, _max_width)
   local is_active = tab.is_active
   local tab_bg = is_active and active_bg or (hover and hover_bg or inactive_bg)
   local tab_fg = is_active and active_fg or (hover and hover_fg or inactive_fg)
@@ -72,7 +87,7 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, _config, hover, max_wi
   return {
     { Background = { Color = tab_bg } },
     { Foreground = { Color = tab_fg } },
-    { Text = ' ' .. title .. ' ' },
+    { Text = ' ' .. tostring(tab.tab_index + 1) .. ' ' },
     { Background = { Color = right_bg } },
     { Foreground = { Color = tab_bg } },
     { Text = SOLID_RIGHT_ARROW },
