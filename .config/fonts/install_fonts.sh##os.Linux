@@ -25,7 +25,14 @@ fi
 
 # Match the full patched family: the glyphs WezTerm wants live only in the Nerd Font
 # build, so a partial match must not let an unpatched SF Mono satisfy the check.
-has_family() { fc-list -f '%{family}\n' 2>/dev/null | grep -qiF "$FAMILY"; }
+# Read fc-list into a variable before matching: piping straight into `grep -q`
+# makes grep exit on the first hit, fc-list die of SIGPIPE (141), and `pipefail`
+# report the whole check as a failure -- i.e. "font missing" whenever it is present.
+has_family() {
+  local families
+  families="$(fc-list -f '%{family}\n' 2>/dev/null)" || return 1
+  grep -qiF "$FAMILY" <<< "$families"
+}
 
 if has_family; then
   echo "$FAMILY already installed."

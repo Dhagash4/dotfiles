@@ -27,6 +27,7 @@ run_step install_nvim
 run_step install_claude
 run_step install_vscode
 run_step install_fonts
+run_step install_keyd
 
 if [ -n "$FAILED" ]; then
   echo

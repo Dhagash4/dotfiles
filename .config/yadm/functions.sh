@@ -126,6 +126,39 @@ install_claude() {
   echo "could not install claude (tried the native installer and npm)." >&2
   return 1
 }
+# keyd is not packaged for Ubuntu 22.04, so build it from source. It hooks in at the
+# evdev level, which is why the capslock->control/esc remap works under Wayland too.
+install_keyd() {
+  if _is_mac; then
+    return 0
+  fi
+
+  if ! command -v keyd >/dev/null 2>&1; then
+    sudo apt-get install -y build-essential git \
+      || { sudo apt-get update && sudo apt-get install -y build-essential git; } \
+      || { echo "could not install keyd build dependencies." >&2; return 1; }
+
+    tmp="$(mktemp -d)"
+    if ! git clone --depth 1 https://github.com/rvaiya/keyd.git "$tmp/keyd"; then
+      rm -rf "$tmp"; echo "could not clone keyd." >&2; return 1
+    fi
+    if ! make -C "$tmp/keyd" || ! sudo make -C "$tmp/keyd" install; then
+      rm -rf "$tmp"; echo "keyd build failed." >&2; return 1
+    fi
+    rm -rf "$tmp"
+  fi
+
+  # keyd reads every /etc/keyd/*.conf; point the default at the tracked config so
+  # edits to the dotfile take effect after a restart.
+  sudo mkdir -p /etc/keyd
+  sudo ln -sfn "$HOME/.config/keyboard/keyd.conf" /etc/keyd/default.conf
+
+  sudo systemctl enable keyd || { echo "could not enable keyd.service." >&2; return 1; }
+  sudo systemctl restart keyd || { echo "could not start keyd.service." >&2; return 1; }
+
+  command -v keyd >/dev/null 2>&1 || { echo "keyd installed but not on PATH." >&2; return 1; }
+  echo "keyd installed and running."
+}
 install_fonts() {
   # yadm symlinks the OS-appropriate variant to install_fonts.sh. Invoke it through
   # bash rather than guarding on [ -x ]: a missing exec bit used to make the whole
