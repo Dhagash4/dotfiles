@@ -15,5 +15,4 @@ ms-vscode-remote.remote-wsl
 ms-vscode.remote-server
 ms-vscode-remote.vscode-remote-extensionpack
 tomoki1207.pdf
-vscodevim.vim
 xaver.clang-format
