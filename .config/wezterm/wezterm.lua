@@ -68,8 +68,8 @@ local function theme_of(scheme)
   return scheme == themes.light.scheme and themes.light or themes.dark
 end
 
-config.color_scheme = themes.light.scheme
-config.colors = tab_bar_colors(themes.light)
+config.color_scheme = themes.dark.scheme
+config.colors = tab_bar_colors(themes.dark)
 
 -- WezTerm has no built-in scheme switch; per-window config overrides are the
 -- supported way to flip one at runtime. F12 because nothing downstream claims
