@@ -23,7 +23,65 @@ config.font = wezterm.font_with_fallback {
 config.font_size = 16
 -- Don't pop up a warning window when a glyph is missing from the font stack.
 config.warn_about_missing_glyphs = false
-config.color_scheme = 'Gruvbox dark, medium (base16)'
+
+-- Gruvbox in both flavours. The tab bar is hand-painted (see format-tab-title
+-- below), so its colours have to be carried alongside the scheme name rather
+-- than coming from the scheme itself.
+local themes = {
+  dark = {
+    scheme = 'Gruvbox dark, medium (base16)',
+    bg = '#282828',
+    fg = '#ebdbb2',
+    active_bg = '#d65d0e',
+    active_fg = '#282828',
+    inactive_bg = '#3c3836',
+    inactive_fg = '#a89984',
+    hover_bg = '#504945',
+    hover_fg = '#ebdbb2',
+  },
+  light = {
+    scheme = 'Gruvbox light, medium (base16)',
+    bg = '#fbf1c7',
+    fg = '#3c3836',
+    active_bg = '#d65d0e',
+    active_fg = '#fbf1c7',
+    inactive_bg = '#ebdbb2',
+    inactive_fg = '#7c6f64',
+    hover_bg = '#d5c4a1',
+    hover_fg = '#3c3836',
+  },
+}
+
+local function tab_bar_colors(theme)
+  return {
+    tab_bar = {
+      background = theme.bg,
+      new_tab = { bg_color = theme.bg, fg_color = theme.fg },
+      new_tab_hover = { bg_color = theme.hover_bg, fg_color = theme.hover_fg },
+    },
+  }
+end
+
+-- The scheme name is the single source of truth for which theme is live, so the
+-- tab-bar painter can recover it from whatever config it is handed.
+local function theme_of(scheme)
+  return scheme == themes.light.scheme and themes.light or themes.dark
+end
+
+config.color_scheme = themes.light.scheme
+config.colors = tab_bar_colors(themes.light)
+
+-- WezTerm has no built-in scheme switch; per-window config overrides are the
+-- supported way to flip one at runtime. F12 because nothing downstream claims
+-- it -- zsh, tmux and nvim all leave it alone.
+wezterm.on('toggle-theme', function(window, _pane)
+  local overrides = window:get_config_overrides() or {}
+  local current = overrides.color_scheme or config.color_scheme
+  local next_theme = current == themes.light.scheme and themes.dark or themes.light
+  overrides.color_scheme = next_theme.scheme
+  overrides.colors = tab_bar_colors(next_theme)
+  window:set_config_overrides(overrides)
+end)
 
 config.enable_tab_bar = true
 -- One tab needs no tab bar; it is just another line of chrome to ignore.
@@ -40,7 +98,9 @@ config.exit_behavior = 'Close'
 -- bare ALT+<digit>: tmux's M-1..M-5 layout keys sit behind the C-a prefix, nvim maps
 -- none, and GNOME uses SUPER+<n> for the dock. The one casualty is zsh's digit-argument
 -- (ESC-<n> numeric prefix), which WezTerm now swallows before the shell sees it.
-config.keys = {}
+config.keys = {
+  { key = 'F12', mods = 'NONE', action = wezterm.action.EmitEvent 'toggle-theme' },
+}
 for i = 1, 9 do
   table.insert(config.keys, {
     key = tostring(i),
@@ -49,32 +109,15 @@ for i = 1, 9 do
   })
 end
 
--- Gruvbox colors for the tab bar
-local bg = '#282828'
-local fg = '#ebdbb2'
-local active_bg = '#d65d0e'
-local active_fg = '#282828'
-local inactive_bg = '#3c3836'
-local inactive_fg = '#a89984'
-local hover_bg = '#504945'
-local hover_fg = '#ebdbb2'
-
-config.colors = {
-  tab_bar = {
-    background = bg,
-    new_tab = { bg_color = bg, fg_color = fg },
-    new_tab_hover = { bg_color = hover_bg, fg_color = hover_fg },
-  },
-}
-
 -- Tabs show their number only. The title was three bars' worth of noise stacked with
 -- tmux's status line and airline; the index is the part actually used to switch tabs.
 -- Flat blocks butted straight against each other, i3-style -- no powerline divider,
 -- so no glyph whose slant has to line up with the next tab's colour.
-wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, _max_width)
+wezterm.on('format-tab-title', function(tab, _tabs, _panes, conf, hover, _max_width)
+  local theme = theme_of(conf.color_scheme)
   local is_active = tab.is_active
-  local tab_bg = is_active and active_bg or (hover and hover_bg or inactive_bg)
-  local tab_fg = is_active and active_fg or (hover and hover_fg or inactive_fg)
+  local tab_bg = is_active and theme.active_bg or (hover and theme.hover_bg or theme.inactive_bg)
+  local tab_fg = is_active and theme.active_fg or (hover and theme.hover_fg or theme.inactive_fg)
 
   return {
     { Background = { Color = tab_bg } },
