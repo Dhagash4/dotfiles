@@ -103,17 +103,10 @@ config.keys = {
   { key = 's', mods = 'LEADER|SHIFT', action = smart_ssh.tab() },    -- ssh in new tab
   { key = '5', mods = 'LEADER',       action = smart_ssh.hsplit() }, -- ssh in horizontal split
   { key = "'", mods = 'LEADER',       action = smart_ssh.vsplit() }, -- ssh in vertical split
-  -- Quick note (floating, centered) via ~/.config/wezterm/open-note.sh
+  -- Quick capture (floating, centered): appends a timestamped entry to today's
+  -- inbox note in the Obsidian vault. All logic lives in open-note.sh.
   { key = 'n', mods = 'LEADER', action = wezterm.action_callback(function(_, _)
-    local timestamp = os.date('%Y-%m-%d_%H%M%S')
-    local note = '/tmp/note_' .. timestamp .. '.md'
-    local f = io.open(note, 'w')
-    if f then
-      f:write('# Note — ' .. os.date('%Y-%m-%d %H:%M') .. '\n\n')
-      f:close()
-    end
-    local home = os.getenv('HOME')
-    os.execute(string.format('%s/.config/wezterm/open-note.sh "%s" &', home, note))
+    os.execute(os.getenv('HOME') .. '/.config/wezterm/open-note.sh &')
   end) },
 }
 for i = 1, 9 do
