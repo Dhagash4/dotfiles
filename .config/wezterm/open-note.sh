@@ -1,12 +1,12 @@
 #!/bin/bash
-# Quick-capture: append a timestamped entry to today's inbox note in the
+# Quick-capture: append an entry to today's inbox note in the
 # Obsidian vault, then open it in a small floating wezterm (floats via the
 # Pop Shell float rule for class "floating-note", not window tricks).
 VAULT="$HOME/projects/work/eternal_amr"
-NOTE="$VAULT/Inbox/$(date +%Y.%m.%d).md"
-mkdir -p "$VAULT/Inbox"
-[ -f "$NOTE" ] || printf '# Inbox — %s\n' "$(date +%Y-%m-%d)" > "$NOTE"
-printf '\n## %s\n\n' "$(date +%H:%M)" >> "$NOTE"
+NOTE="$VAULT/Daily Notes/$(date +%Y.%m.%d).md"
+mkdir -p "$VAULT/Daily Notes"
+[ -f "$NOTE" ] || printf '# %s\n' "$(date +%Y-%m-%d)" > "$NOTE"
+printf '\n' >> "$NOTE"
 
 COLS=70; ROWS=18
 # Center the window (X11). If xdpyinfo is missing, fall back to 1920x1080.
