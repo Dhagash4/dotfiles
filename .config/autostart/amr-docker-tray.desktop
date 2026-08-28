@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=AMR Docker Tray
+Comment=Docker status indicator in the GNOME top bar
+Exec=/home/dhagash/.local/bin/amr-docker-tray
+Icon=amr-docker
+Terminal=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=8

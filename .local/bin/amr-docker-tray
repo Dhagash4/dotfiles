@@ -1,0 +1,214 @@
+#!/usr/bin/env python3
+"""
+amr-docker-tray - GNOME top-bar indicator for the AMR Docker stack.
+
+Shows a Docker whale in the top bar *while the docker daemon is running*
+(the indicator goes PASSIVE, i.e. disappears, when it is stopped) and gives
+a menu with the running containers, a shell into any of them, and the
+amr-docker dev-container launcher.
+
+  AMR_TRAY_ALWAYS=1   keep the icon visible even when the daemon is stopped
+                      (handy if you want to start docker from the menu)
+
+Runs on GTK3 + Ayatana AppIndicator, which Ubuntu's built-in
+'ubuntu-appindicators' GNOME extension renders in the top bar.
+"""
+
+import os
+import shutil
+import subprocess
+
+import gi
+
+gi.require_version("Gtk", "3.0")
+gi.require_version("AyatanaAppIndicator3", "0.1")
+from gi.repository import AyatanaAppIndicator3 as AppIndicator  # noqa: E402
+from gi.repository import GLib, Gtk  # noqa: E402
+
+APP_ID = "amr-docker-tray"
+ICON_NAME = "amr-docker"
+ICON_PATH = os.path.expanduser("~/.local/share/icons/hicolor/scalable/apps")
+POLL_SECONDS = 4
+ALWAYS_VISIBLE = os.environ.get("AMR_TRAY_ALWAYS", "") == "1"
+
+AMR_DOCKER_DIR = os.path.expanduser("~/projects/work/amr-docker")
+RUN_DEV = os.path.join(AMR_DOCKER_DIR, "scripts", "run_dev.sh")
+
+
+def run(cmd, timeout=4):
+    """Run a command, return (rc, stdout). Never raises."""
+    try:
+        p = subprocess.run(
+            cmd, capture_output=True, text=True, timeout=timeout, check=False
+        )
+        return p.returncode, p.stdout.strip()
+    except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+        return 1, ""
+
+
+def terminal_cmd(inner):
+    """Wrap a shell command so it opens in whatever terminal is installed."""
+    for term, flag in (
+        ("gnome-terminal", "--"),
+        ("kgx", "--"),
+        ("xfce4-terminal", "-e"),
+        ("konsole", "-e"),
+        ("xterm", "-e"),
+    ):
+        if shutil.which(term):
+            if flag == "--":
+                return [term, "--", "bash", "-lc", inner]
+            return [term, flag, "bash", "-lc", inner]
+    return None
+
+
+def spawn(inner):
+    cmd = terminal_cmd(inner)
+    if cmd:
+        subprocess.Popen(cmd, start_new_session=True)
+
+
+class DockerTray:
+    def __init__(self):
+        self.indicator = AppIndicator.Indicator.new_with_path(
+            APP_ID, ICON_NAME, AppIndicator.IndicatorCategory.SYSTEM_SERVICES, ICON_PATH
+        )
+        self.indicator.set_title("Docker")
+        self.menu = Gtk.Menu()
+        self.indicator.set_menu(self.menu)
+        self.signature = None
+        self.refresh()
+        GLib.timeout_add_seconds(POLL_SECONDS, self.refresh)
+
+    # ── state ────────────────────────────────────────────────
+    def poll(self):
+        rc, version = run(["docker", "info", "--format", "{{.ServerVersion}}"])
+        if rc != 0:
+            # daemon down, or we lack socket access (not in group 'docker' yet)
+            _, active = run(["systemctl", "is-active", "docker"])
+            return {"up": False, "version": None, "unit": active, "containers": []}
+
+        _, out = run(
+            ["docker", "ps", "--format", "{{.Names}}\t{{.Status}}\t{{.Image}}"]
+        )
+        containers = [line.split("\t") for line in out.splitlines() if line]
+        _, stopped = run(
+            ["docker", "ps", "-a", "-q", "--filter", "status=exited"]
+        )
+        return {
+            "up": True,
+            "version": version,
+            "unit": "active",
+            "containers": containers,
+            "stopped": len([x for x in stopped.splitlines() if x]),
+        }
+
+    def refresh(self):
+        state = self.poll()
+        sig = repr(state)
+        if sig != self.signature:
+            self.signature = sig
+            self.rebuild_menu(state)
+            self.indicator.set_status(
+                AppIndicator.IndicatorStatus.ACTIVE
+                if (state["up"] or ALWAYS_VISIBLE)
+                else AppIndicator.IndicatorStatus.PASSIVE
+            )
+            n = len(state["containers"])
+            self.indicator.set_title(
+                f"Docker {state['version']} · {n} running" if state["up"] else "Docker (stopped)"
+            )
+        return True  # keep the timeout alive
+
+    # ── menu ─────────────────────────────────────────────────
+    def rebuild_menu(self, state):
+        for child in self.menu.get_children():
+            self.menu.remove(child)
+
+        if state["up"]:
+            self.add_label(f"Docker {state['version']} — running")
+        elif state["unit"] == "active":
+            self.add_label("Daemon up, but permission denied")
+            self.add_label("(log out/in to pick up the 'docker' group)")
+        else:
+            self.add_label(f"Docker daemon: {state['unit'] or 'stopped'}")
+        self.add_sep()
+
+        if state["up"]:
+            containers = state["containers"]
+            if containers:
+                self.add_label(f"{len(containers)} container(s) running")
+                for name, status, image in containers:
+                    item = Gtk.MenuItem(label=f"  {name}  ({status})")
+                    sub = Gtk.Menu()
+                    self.sub_item(sub, "Shell into container", self.on_shell, name)
+                    self.sub_item(sub, "Follow logs", self.on_logs, name)
+                    self.sub_item(sub, "Stop container", self.on_stop_container, name)
+                    self.sub_item(sub, f"image: {image}", None, None)
+                    item.set_submenu(sub)
+                    self.menu.append(item)
+            else:
+                self.add_label("No containers running")
+            self.add_sep()
+
+        self.add_action("Launch AMR dev container", self.on_start_amr)
+        self.add_action("docker ps -a  (in a terminal)", self.on_ps)
+        self.add_sep()
+        if state["up"]:
+            self.add_action("Stop docker daemon", self.on_daemon, "stop")
+            self.add_action("Restart docker daemon", self.on_daemon, "restart")
+        else:
+            self.add_action("Start docker daemon", self.on_daemon, "start")
+        self.add_sep()
+        self.add_action("Quit tray", lambda *_: Gtk.main_quit())
+        self.menu.show_all()
+
+    def add_label(self, text):
+        item = Gtk.MenuItem(label=text)
+        item.set_sensitive(False)
+        self.menu.append(item)
+
+    def add_sep(self):
+        self.menu.append(Gtk.SeparatorMenuItem())
+
+    def add_action(self, text, cb, arg=None):
+        item = Gtk.MenuItem(label=text)
+        item.connect("activate", lambda _w: cb(arg) if arg is not None else cb(None))
+        self.menu.append(item)
+
+    def sub_item(self, sub, text, cb, arg):
+        item = Gtk.MenuItem(label=text)
+        if cb is None:
+            item.set_sensitive(False)
+        else:
+            item.connect("activate", lambda _w: cb(arg))
+        sub.append(item)
+
+    # ── actions ──────────────────────────────────────────────
+    def on_shell(self, name):
+        spawn(f"docker exec -it {name} bash || read -p 'failed - enter to close'")
+
+    def on_logs(self, name):
+        spawn(f"docker logs -f --tail 200 {name}")
+
+    def on_stop_container(self, name):
+        subprocess.Popen(["docker", "stop", name], start_new_session=True)
+
+    def on_ps(self, _):
+        spawn("docker ps -a; echo; read -p 'enter to close'")
+
+    def on_start_amr(self, _):
+        if os.path.exists(RUN_DEV):
+            spawn(f"bash {RUN_DEV} -b; read -p 'enter to close'")
+        else:
+            spawn(f"echo 'not found: {RUN_DEV}'; read -p 'enter to close'")
+
+    def on_daemon(self, action):
+        subprocess.Popen(
+            ["pkexec", "systemctl", action, "docker"], start_new_session=True
+        )
+
+
+if __name__ == "__main__":
+    DockerTray()
+    Gtk.main()

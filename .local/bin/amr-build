@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────
+#  amr-build - colcon build of amr_ws INSIDE the AMR dev container,
+#  with compile_commands.json export + merge for clangd.
+#
+#    amr-build                       # build everything
+#    amr-build --packages-select foo # any extra colcon args pass through
+#    AMR_WS=util_ws amr-build        # build a different workspace
+# ─────────────────────────────────────────────────────────────
+set -euo pipefail
+
+CONTAINER="${AMR_CONTAINER:-isaac_ros_dev-x86_64-container}"
+WS="${AMR_WS:-amr_ws}"
+CWS="/workspaces/isaac_ros-dev/${WS}"
+
+if ! docker ps --format '{{.Names}}' | grep -qx "$CONTAINER"; then
+    echo "Container '$CONTAINER' is not running."
+    echo "Start it first:  bash ~/projects/work/amr-docker/scripts/run_dev.sh -b"
+    exit 1
+fi
+
+TTY=(); [ -t 0 ] && TTY=(-it)
+USER_FLAG=(-u admin)
+docker exec "${USER_FLAG[@]}" "$CONTAINER" true 2>/dev/null || USER_FLAG=()
+
+# -DCMAKE_BUILD_TYPE=Release is repeated on purpose: a CLI --cmake-args
+# REPLACES the one in /etc/colcon/defaults.yaml, it does not merge with it.
+docker exec "${TTY[@]}" "${USER_FLAG[@]}" -w "$CWS" "$CONTAINER" bash -lc "
+    set -e
+    source /opt/ros/humble/setup.bash
+    colcon build --symlink-install \
+        --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        $*
+"
+
+echo "── merging compile_commands.json ──"
+docker exec "${USER_FLAG[@]}" -w "$CWS" "$CONTAINER" python3 -c "
+import glob, json
+entries = []
+for f in sorted(glob.glob('build/*/compile_commands.json')):
+    try:
+        entries += json.load(open(f))
+    except Exception as e:
+        print('  skip', f, e)
+json.dump(entries, open('compile_commands.json', 'w'), indent=1)
+print(f'  {len(entries)} entries from {len(glob.glob(\"build/*/compile_commands.json\"))} packages')
+"
+echo "→ ~/workspaces/${WS}/compile_commands.json"
