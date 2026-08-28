@@ -12,7 +12,7 @@
 
 [core]
 	editor = nvim
-  pager =  diff-so-fancy | less --tabs=4 -RF
+  pager =  delta
 
 [merge]
 	tool = meld
@@ -53,3 +53,9 @@
 [user]
 	name = Dhagash Desai
 	email = desai.dhagash@gmail.com
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential

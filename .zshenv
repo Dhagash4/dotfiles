@@ -11,3 +11,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 command -v thefuck >/dev/null 2>&1 && eval $(thefuck --alias)
+
+# CUDA toolkit
+[ -f "$HOME/.cuda.zsh" ] && source "$HOME/.cuda.zsh"

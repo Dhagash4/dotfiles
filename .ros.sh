@@ -6,6 +6,7 @@
 
 export ROS_DISTRO=humble 
 export ROS_DOMAIN_ID=0
+
 # Fix zsh autocomplete in zsh
 if [ -f /opt/ros/${ROS_DISTRO}/setup.zsh ]; then
   source /opt/ros/${ROS_DISTRO}/setup.zsh

@@ -17,8 +17,7 @@ let g:airline_powerline_fonts=1
 set background=dark
 let g:gruvbox_material_background = 'dark'
 let g:gruvbox_material_better_performance = 1
-let g:gruvbox_italicize_comments = 1
-let g:gruvbox_italicize_strings = 1
+let g:gruvbox_material_enable_italic = 1
 
 colorscheme gruvbox-material
 
@@ -33,9 +32,6 @@ set shiftwidth=2
 set softtabstop=-1
 set nohlsearch
 set clipboard+=unnamedplus
-
-"Binding for gotodefination
-nmap <silent>gd <C-]>
 
 " --- FOR BETTER LIFE ---
 nnoremap <Up> <NOP>
@@ -85,7 +81,8 @@ map! <silent><C-s>     <ESC>:w<cr>
 " => Format Settings (using Neoformat)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:neoformat_enabled_cpp = ['clangformat']
-let g:neoformat_enabled_python = ['black', 'docformatter', 'isort']
+" isort/docformatter not installed; add them back here after `pip install isort docformatter`
+let g:neoformat_enabled_python = ['black']
 let g:neoformat_only_msg_on_error = 0
 let g:neoformat_run_all_formatters = 0
 let g:shfmt_opt="-ci"

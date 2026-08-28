@@ -40,9 +40,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '*' }
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'nvim-telescope/telescope-project.nvim'
-Plug 'BurntSushi/ripgrep'
-Plug 'sharkdp/fd'
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'master', 'do': ':TSUpdate' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
@@ -80,4 +78,11 @@ Plug 'AndrewRadev/tagalong.vim'
 
 " Copilot
 " Plug 'github/copilot.vim'
+
+" AI code completion (virtual-text mode, works alongside CoC)
+Plug 'milanglacier/minuet-ai.nvim'
+
+" Remote development (SSH, Docker, devcontainers)
+Plug 'MunifTanjim/nui.nvim'
+Plug 'amitds1997/remote-nvim.nvim'
 call plug#end()
