@@ -1,8 +1,10 @@
 btop
+clang-format
 fzf
 git
 jq
 ripgrep
+shfmt
 tmux
 universal-ctags
 wget

@@ -1,20 +1,44 @@
 #!/bin/bash
 # Orchestrates a fresh-machine setup. Run automatically by `yadm clone --bootstrap`.
-set -e
+set -u
 
 YADM_DIR="$HOME/.config/yadm"
 # shellcheck source=/dev/null
 source "$YADM_DIR/functions.sh"
 
-install_packages || true
-install_gui      || true
-install_ohmyzsh  || true
-install_nvim     || true
-install_vscode   || true
+FAILED=""
 
-# Fonts: yadm symlinks the OS-appropriate variant to install_fonts.sh.
-if [ -x "$HOME/.config/fonts/install_fonts.sh" ]; then
-  "$HOME/.config/fonts/install_fonts.sh" || true
+# Keep going when a step fails — a fresh machine should get as far as it can — but
+# record what broke and report it at the end. Blanket "|| true" is what let a failed
+# font install go unnoticed until WezTerm complained about an unknown font.
+run_step() {
+  echo "==> $1"
+  if "$1"; then
+    return 0
+  fi
+  echo "!!! $1 failed" >&2
+  FAILED="$FAILED $1"
+}
+
+run_step install_packages
+run_step install_gui
+run_step install_ohmyzsh
+run_step install_nvim
+run_step install_claude
+run_step install_claude_plugins
+run_step install_vscode
+run_step install_formatters
+run_step install_fonts
+run_step install_keyd
+run_step install_plotjuggler
+run_step install_gnome_desktop
+
+if [ -n "$FAILED" ]; then
+  echo
+  echo "Bootstrap finished, but these steps failed:$FAILED"
+  echo "Fix the cause and re-run just those steps:"
+  echo "  source $YADM_DIR/functions.sh && <step_name>"
+  exit 1
 fi
 
 echo "Bootstrap complete. Run 'exec zsh' (or open a new terminal) to load everything."

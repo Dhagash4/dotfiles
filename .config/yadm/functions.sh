@@ -62,7 +62,7 @@ install_ohmyzsh() {
 
   # Make zsh the default shell.
   if [ "$(basename "${SHELL:-}")" != "zsh" ] && command -v zsh >/dev/null 2>&1; then
-    sudo chsh -s "$(command -v zsh)" "$USER" 2>/dev/null || chsh -s "$(command -v zsh)" || true
+    sudo chsh -s "$(command -v zsh)" "${USER:-$(id -un)}" 2>/dev/null || chsh -s "$(command -v zsh)" || true
   fi
 }
 install_nvim() {
@@ -94,8 +94,202 @@ install_nvim() {
     nvim --headless -c "CocInstall -sync $exts" +qall 2>/dev/null || true
   fi
 }
+# `claude` may not be on PATH yet in this non-interactive shell, so also look where
+# the native installer puts it.
+_claude_present() { command -v claude >/dev/null 2>&1 || [ -x "$HOME/.local/bin/claude" ]; }
+
+install_claude() {
+  if _claude_present; then
+    echo "claude already installed."
+    return 0
+  fi
+
+  # Official native installer; installs to ~/.local/bin, which .zshrc puts on PATH.
+  # Check the result rather than the pipeline's status: `curl | bash` reports bash's
+  # exit code, so a failed download would otherwise look like a success.
+  curl -fsSL https://claude.ai/install.sh | bash || true
+  if _claude_present; then
+    echo "claude installed (native)."
+    return 0
+  fi
+
+  # Fallback for platforms with no native build. Uses the node from install_nvim, so
+  # keep this step after it in the bootstrap order.
+  if command -v npm >/dev/null 2>&1; then
+    npm install -g @anthropic-ai/claude-code || true
+    if _claude_present; then
+      echo "claude installed (npm)."
+      return 0
+    fi
+  fi
+
+  echo "could not install claude (tried the native installer and npm)." >&2
+  return 1
+}
+# keyd is not packaged for Ubuntu 22.04, so build it from source. It hooks in at the
+# evdev level, which is why the capslock->control/esc remap works under Wayland too.
+install_keyd() {
+  if _is_mac; then
+    return 0
+  fi
+
+  if ! command -v keyd >/dev/null 2>&1; then
+    sudo apt-get install -y build-essential git \
+      || { sudo apt-get update && sudo apt-get install -y build-essential git; } \
+      || { echo "could not install keyd build dependencies." >&2; return 1; }
+
+    tmp="$(mktemp -d)"
+    if ! git clone --depth 1 https://github.com/rvaiya/keyd.git "$tmp/keyd"; then
+      rm -rf "$tmp"; echo "could not clone keyd." >&2; return 1
+    fi
+    if ! make -C "$tmp/keyd" || ! sudo make -C "$tmp/keyd" install; then
+      rm -rf "$tmp"; echo "keyd build failed." >&2; return 1
+    fi
+    rm -rf "$tmp"
+  fi
+
+  # keyd reads every /etc/keyd/*.conf; point the default at the tracked config so
+  # edits to the dotfile take effect after a restart.
+  sudo mkdir -p /etc/keyd
+  sudo ln -sfn "$HOME/.config/keyboard/keyd.conf" /etc/keyd/default.conf
+
+  # `make install` drops a fresh unit into /usr/local/lib/systemd/system; without a
+  # reload systemctl can still report it as not found.
+  sudo systemctl daemon-reload
+  sudo systemctl enable keyd || { echo "could not enable keyd.service." >&2; return 1; }
+  sudo systemctl restart keyd || { echo "could not start keyd.service." >&2; return 1; }
+
+  command -v keyd >/dev/null 2>&1 || { echo "keyd installed but not on PATH." >&2; return 1; }
+  echo "keyd installed and running."
+}
+install_fonts() {
+  # yadm symlinks the OS-appropriate variant to install_fonts.sh. Invoke it through
+  # bash rather than guarding on [ -x ]: a missing exec bit used to make the whole
+  # font step vanish without a word.
+  script="$HOME/.config/fonts/install_fonts.sh"
+  if [ ! -e "$script" ]; then
+    echo "missing $script (did 'yadm alt' run?)" >&2
+    return 1
+  fi
+  bash "$script"
+}
+# PlotJuggler 4 ships only as a GitHub release (no apt repo, and the Ubuntu archive
+# has nothing). The .deb drops a self-contained Qt build in /opt/plotjuggler4 with no
+# /usr/bin symlink and no .desktop entry, which is why .aliases.zsh defines `pj4`.
+install_plotjuggler() {
+  if _is_mac; then
+    echo "no PlotJuggler build published for macOS; skipping."
+    return 0
+  fi
+
+  if [ -x /opt/plotjuggler4/bin/plotjuggler4 ]; then
+    echo "plotjuggler4 already installed."
+    return 0
+  fi
+
+  url="$(curl -fsSL https://api.github.com/repos/facontidavide/PlotJuggler/releases/latest \
+    | grep -o 'https://[^"]*plotjuggler4_[^"]*_amd64\.deb' | head -1)"
+  if [ -z "$url" ]; then
+    echo "could not find a plotjuggler4 .deb in the latest release." >&2
+    return 1
+  fi
+
+  tmp="$(mktemp -d)"
+  if ! curl -fsSL -o "$tmp/plotjuggler4.deb" "$url"; then
+    rm -rf "$tmp"; echo "could not download $url" >&2; return 1
+  fi
+  # `apt install ./file.deb` rather than `dpkg -i` so the dependencies come along.
+  if ! sudo apt install -y "$tmp/plotjuggler4.deb"; then
+    rm -rf "$tmp"; echo "plotjuggler4 install failed." >&2; return 1
+  fi
+  rm -rf "$tmp"
+
+  [ -x /opt/plotjuggler4/bin/plotjuggler4 ] || { echo "plotjuggler4 missing after install." >&2; return 1; }
+  echo "plotjuggler4 installed (run it with the pj4 alias)."
+}
+# Desktop settings (dock position, top bar, extensions, keyboard) live as dconf dumps
+# under ~/.config/gnome. Re-capture them with ~/.config/gnome/dump.sh after tweaking the
+# desktop, then commit — that is what keeps a fresh machine from needing a manual pass.
+install_gnome_desktop() {
+  if _is_mac; then
+    return 0
+  fi
+
+  script="$HOME/.config/gnome/apply.sh"
+  if [ ! -e "$script" ]; then
+    echo "missing $script" >&2
+    return 1
+  fi
+  bash "$script"
+}
+# Claude Code plugins. The install state lives in ~/.claude/plugins, which is machine
+# -local (absolute paths, resolved versions), so track two plain lists instead and replay
+# them. Regenerate after adding plugins:
+#   claude plugin list | grep -oE '[a-z0-9-]+@[a-z-]+' | sort -u   > claude-plugins
+# and add any new marketplace to claude-marketplaces.
+install_claude_plugins() {
+  _claude_present || { echo "claude not installed; skipping plugins." >&2; return 1; }
+  cmd="$(command -v claude || echo "$HOME/.local/bin/claude")"
+
+  plugins="$YADM_DIR/claude-plugins"
+  markets="$YADM_DIR/claude-marketplaces"
+  for f in "$plugins" "$markets"; do
+    [ -e "$f" ] || { echo "missing $f" >&2; return 1; }
+  done
+
+  # Marketplaces first: a plugin only resolves once its marketplace is configured.
+  while read -r name source; do
+    case "${name%%#*}" in "") continue ;; esac
+    [ -n "$source" ] || continue
+    "$cmd" plugin marketplace list 2>/dev/null | grep -q "$name" && continue
+    "$cmd" plugin marketplace add "$source" || echo "  !! could not add marketplace $name" >&2
+  done < "$markets"
+
+  failed=""
+  while read -r entry; do
+    entry="${entry%%#*}"; entry="$(echo "$entry" | tr -d '[:space:]')"
+    [ -n "$entry" ] || continue
+    # -y is required anyway when stdout is not a TTY, which is the case under bootstrap.
+    if "$cmd" plugin install "$entry" -y --scope user >/dev/null 2>&1; then
+      echo "  $entry"
+    else
+      failed="$failed $entry"
+    fi
+  done < "$plugins"
+
+  if [ -n "$failed" ]; then
+    echo "could not install:$failed" >&2
+    return 1
+  fi
+  echo "claude plugins installed (restart claude to load them)."
+}
+# Formatters neoformat drives. clang-format and shfmt come from the package lists;
+# these three are pip-only or hopelessly stale there (apt ships black 21.12b0, which
+# formats differently enough to churn every file it touches).
+install_formatters() {
+  if _is_mac; then
+    for f in black isort docformatter; do brew install "$f" || true; done
+    return 0
+  fi
+
+  command -v pip3 >/dev/null 2>&1 || sudo apt install -y python3-pip || return 1
+  # --user keeps them out of the system python; .zshrc already has ~/.local/bin on PATH.
+  pip3 install --user --upgrade black isort docformatter || return 1
+
+  missing=""
+  for f in black isort docformatter; do
+    [ -x "$HOME/.local/bin/$f" ] || command -v "$f" >/dev/null 2>&1 || missing="$missing $f"
+  done
+  [ -z "$missing" ] || { echo "formatters missing after install:$missing" >&2; return 1; }
+  echo "python formatters installed."
+}
 install_vscode() {
-  command -v code >/dev/null 2>&1 || return 0
+  # Returning 0 here is what hid a whole missing extension set: bootstrap reported
+  # success while installing nothing, because install_gui had failed earlier.
+  if ! command -v code >/dev/null 2>&1; then
+    echo "code is not on PATH (did install_gui fail?)" >&2
+    return 1
+  fi
 
   # macOS stores user config under Library; point it at the tracked path.
   if _is_mac; then
@@ -107,7 +301,15 @@ install_vscode() {
     fi
   fi
 
+  failed=""
   while read -r ext; do
-    [ -n "$ext" ] && code --install-extension "$ext" --force || true
+    [ -n "$ext" ] || continue
+    code --install-extension "$ext" --force >/dev/null 2>&1 || failed="$failed $ext"
   done < "$YADM_DIR/vscode-extensions.txt"
+
+  if [ -n "$failed" ]; then
+    echo "could not install extensions:$failed" >&2
+    return 1
+  fi
+  echo "vscode extensions installed."
 }

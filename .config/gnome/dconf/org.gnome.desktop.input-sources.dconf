@@ -1,0 +1,4 @@
+# dconf dump of /org/gnome/desktop/input-sources/ — regenerate with ~/.config/gnome/dump.sh
+[/]
+sources=[('xkb', 'us')]
+xkb-options=@as []
