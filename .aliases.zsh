@@ -23,7 +23,4 @@ if [[ $(uname) == "Darwin" ]]; then
   alias work="cd ~/projects/work"
 else
   alias cat="batcat"
-
-  # PlotJuggler 4 installs to /opt with no symlink on PATH (see yadm install_plotjuggler).
-  alias pj4="/opt/plotjuggler4/bin/plotjuggler4"
 fi

@@ -173,39 +173,38 @@ install_fonts() {
   fi
   bash "$script"
 }
-# PlotJuggler 4 ships only as a GitHub release (no apt repo, and the Ubuntu archive
-# has nothing). The .deb drops a self-contained Qt build in /opt/plotjuggler4 with no
-# /usr/bin symlink and no .desktop entry, which is why .aliases.zsh defines `pj4`.
+# PlotJuggler 4 ships only as a GitHub release (no apt repo, and the Ubuntu archive has
+# nothing). The .deb needs sudo and drops an unlinked build in /opt, so take the AppImage
+# instead: keep the versioned file under ~/.local/share/plotjuggler and put `pj4` on PATH
+# as a symlink, so an upgrade is just a re-point.
 install_plotjuggler() {
   if _is_mac; then
     echo "no PlotJuggler build published for macOS; skipping."
     return 0
   fi
 
-  if [ -x /opt/plotjuggler4/bin/plotjuggler4 ]; then
-    echo "plotjuggler4 already installed."
-    return 0
-  fi
-
   url="$(curl -fsSL https://api.github.com/repos/facontidavide/PlotJuggler/releases/latest \
-    | grep -o 'https://[^"]*plotjuggler4_[^"]*_amd64\.deb' | head -1)"
+    | grep -o 'https://[^"]*PlotJuggler-[^"]*-x86_64\.AppImage' | head -1)"
   if [ -z "$url" ]; then
-    echo "could not find a plotjuggler4 .deb in the latest release." >&2
+    echo "could not find a PlotJuggler AppImage in the latest release." >&2
     return 1
   fi
 
-  tmp="$(mktemp -d)"
-  if ! curl -fsSL -o "$tmp/plotjuggler4.deb" "$url"; then
-    rm -rf "$tmp"; echo "could not download $url" >&2; return 1
-  fi
-  # `apt install ./file.deb` rather than `dpkg -i` so the dependencies come along.
-  if ! sudo apt install -y "$tmp/plotjuggler4.deb"; then
-    rm -rf "$tmp"; echo "plotjuggler4 install failed." >&2; return 1
-  fi
-  rm -rf "$tmp"
+  dir="$HOME/.local/share/plotjuggler"
+  app="$dir/${url##*/}"
+  mkdir -p "$dir" "$HOME/.local/bin"
 
-  [ -x /opt/plotjuggler4/bin/plotjuggler4 ] || { echo "plotjuggler4 missing after install." >&2; return 1; }
-  echo "plotjuggler4 installed (run it with the pj4 alias)."
+  if [ -x "$app" ]; then
+    echo "plotjuggler4 $(basename "$app") already downloaded."
+  else
+    if ! curl -fsSL -o "$app" "$url"; then
+      rm -f "$app"; echo "could not download $url" >&2; return 1
+    fi
+    chmod +x "$app"
+  fi
+
+  ln -sfn "$app" "$HOME/.local/bin/pj4"
+  echo "plotjuggler4 installed (run it with pj4)."
 }
 # Desktop settings (dock position, top bar, extensions, keyboard) live as dconf dumps
 # under ~/.config/gnome. Re-capture them with ~/.config/gnome/dump.sh after tweaking the
@@ -312,4 +311,25 @@ install_vscode() {
     return 1
   fi
   echo "vscode extensions installed."
+}
+# Work-only, so deliberately NOT in bootstrap — run it by hand when a job needs it:
+#   source ~/.config/yadm/functions.sh && install_tailscale
+# Tailscale is not in the Ubuntu archive, so use the official installer: it adds the
+# apt repo, installs, and enables tailscaled. Login is interactive, so `tsu` is left
+# to the user (see .aliases_work.zsh).
+install_tailscale() {
+  if _is_mac; then
+    brew install --cask tailscale || true
+    return 0
+  fi
+
+  if command -v tailscale >/dev/null 2>&1; then
+    echo "tailscale already installed."
+    return 0
+  fi
+
+  # `curl | sh` reports sh's status, so check the binary instead of the pipeline.
+  curl -fsSL https://tailscale.com/install.sh | sh || true
+  command -v tailscale >/dev/null 2>&1 || { echo "could not install tailscale." >&2; return 1; }
+  echo "tailscale installed; run 'tsu' to log in."
 }

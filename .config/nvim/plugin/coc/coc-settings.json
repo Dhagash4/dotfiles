@@ -44,8 +44,8 @@
     "--log=verbose",
     "--header-insertion=never"
   ],
-  "clangd.fallbackFlags": ["-std=c++14"],
-  "clangd.path": "/usr/bin/clangd",
+  "clangd.fallbackFlags": ["-std=c++17"],
+  "clangd.path": "/home/dhagash/.local/bin/clangd-amr",
 
   // LaTeX
   "coc.source.vimtex.filetypes": ["tex"],

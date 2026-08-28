@@ -53,3 +53,5 @@
 [user]
 	name = Dhagash Desai
 	email = desai.dhagash@gmail.com
+[url "git@github.com:Eternal-Robotics/"]
+	insteadOf = https://github.com/Eternal-Robotics/

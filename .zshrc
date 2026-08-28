@@ -45,3 +45,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# AMR docker (added 2026-08-25)
+alias start_docker='bash ~/projects/work/amr-docker/scripts/run_dev.sh -b'
+alias start_docker_build='bash ~/projects/work/amr-docker/scripts/run_dev.sh'
+alias amr_shell='docker exec -it -u admin -w /workspaces/isaac_ros-dev/amr_ws isaac_ros_dev-x86_64-container bash'
