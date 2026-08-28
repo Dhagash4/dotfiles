@@ -59,4 +59,34 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nmap <silent> ff <Plug>(coc-fix-current)
+
+"--- CoC: hover documentation (replaces default K)
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation() abort
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+"--- CoC: rename symbol
+nmap <leader>rn <Plug>(coc-rename)
+
+"--- CoC: Quick Actions (code actions)
+" Quick Action at cursor — like VSCode Ctrl+. (autofix, imports, etc.)
+nmap <leader>ac <Plug>(coc-codeaction-cursor)
+" Source actions for the whole file (organize imports, etc.)
+nmap <leader>as <Plug>(coc-codeaction-source)
+" Code action on a visual selection
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+" Apply the quickfix for the current line
+nmap <silent> <leader>qf <Plug>(coc-fix-current)
+
+"--- CoC: jump between diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+"--- CoC: format a visual selection / range
+xmap <leader>cf <Plug>(coc-format-selected)
+nmap <leader>cf <Plug>(coc-format-selected)

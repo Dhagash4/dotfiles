@@ -27,6 +27,13 @@
   "python.linting.pylintEnabled": false,
   "pyright.enable": true,
   "inlayHint.enable": false,
+  // ROS 2 Humble: lets pyright resolve rclpy and generated *.msg/*.srv imports.
+  // For your own packages' messages, add their install/.../site-packages via a
+  // per-workspace pyrightconfig.json.
+  "python.analysis.extraPaths": [
+    "/opt/ros/humble/lib/python3.10/site-packages",
+    "/opt/ros/humble/local/lib/python3.10/dist-packages"
+  ],
 
   // C++
   "clangd.enabled": true,
@@ -41,7 +48,6 @@
     "--query-driver=/usr/bin/c++",
     "--all-scopes-completion",
     "--pch-storage=memory",
-    "--log=verbose",
     "--header-insertion=never"
   ],
   "clangd.fallbackFlags": ["-std=c++17"],

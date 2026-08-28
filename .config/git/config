@@ -12,7 +12,7 @@
 
 [core]
 	editor = nvim
-  pager =  diff-so-fancy | less --tabs=4 -RF
+  pager =  delta
 
 [merge]
 	tool = meld
@@ -55,3 +55,9 @@
 	email = desai.dhagash@gmail.com
 [url "git@github.com:Eternal-Robotics/"]
 	insteadOf = https://github.com/Eternal-Robotics/
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
