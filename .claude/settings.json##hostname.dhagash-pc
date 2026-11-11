@@ -54,5 +54,9 @@
       },
       "autoUpdate": true
     }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"$(ls ~/.claude/plugins/cache/ponytail/ponytail/*/hooks/ponytail-statusline.sh | sort -V | tail -1)\""
   }
 }
