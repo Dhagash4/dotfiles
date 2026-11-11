@@ -12,7 +12,8 @@
     "feature-dev@claude-plugins-official": true,
     "pr-review-toolkit@claude-plugins-official": true,
     "remember@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true
+    "clangd-lsp@claude-plugins-official": true,
+    "ponytail@ponytail": true
   },
   "promptSuggestionEnabled": false,
   "theme": "dark",
@@ -44,5 +45,14 @@
       "**Trusted repo**: /home/dhagash/Downloads — a git repository with no tracked files and no configured remotes; treat as an empty/local-only working directory with no established remote trust",
       "**Org-specific CLIs**: None configured"
     ]
+  },
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      },
+      "autoUpdate": true
+    }
   }
 }
