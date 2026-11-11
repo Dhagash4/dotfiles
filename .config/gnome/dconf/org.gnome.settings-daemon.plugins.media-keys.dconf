@@ -1,0 +1,13 @@
+# dconf dump of /org/gnome/settings-daemon/plugins/media-keys/ — regenerate with ~/.config/gnome/dump.sh
+[/]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/flameshot/']
+
+[custom-keybindings/PopLaunch1]
+binding='Launch1'
+command='gnome-control-center wifi'
+name='WiFi'
+
+[custom-keybindings/flameshot]
+binding='Print'
+command='flameshot gui'
+name='Flameshot'

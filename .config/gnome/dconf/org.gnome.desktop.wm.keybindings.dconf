@@ -1,0 +1,8 @@
+# dconf dump of /org/gnome/desktop/wm/keybindings/ — regenerate with ~/.config/gnome/dump.sh
+[/]
+move-to-monitor-left=['<Primary><Shift>Left']
+move-to-monitor-right=['<Primary><Shift>Right']
+move-to-workspace-down=['<Primary><Alt>Down']
+move-to-workspace-up=['<Primary><Alt>Up']
+switch-to-workspace-down=['<Primary><Super>Down', '<Primary><Super>KP_Down', '<Primary><Super>j']
+switch-to-workspace-up=['<Primary><Super>Up', '<Primary><Super>KP_Up', '<Primary><Super>k']
