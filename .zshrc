@@ -50,3 +50,5 @@ export PATH="$HOME/.local/bin:$PATH"
 alias start_docker='bash ~/projects/work/amr-docker/scripts/run_dev.sh -b'
 alias start_docker_build='bash ~/projects/work/amr-docker/scripts/run_dev.sh'
 alias amr_shell='docker exec -it -u admin -w /workspaces/isaac_ros-dev/amr_ws isaac_ros_dev-x86_64-container bash'
+
+export PATH="$HOME/.pixi/bin:$PATH"
