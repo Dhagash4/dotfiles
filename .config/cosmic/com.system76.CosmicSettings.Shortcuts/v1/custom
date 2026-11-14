@@ -5,5 +5,5 @@
     (modifiers: [Ctrl, Alt], key: "Up"): MoveToPreviousWorkspace,
     (modifiers: [Super, Ctrl], key: "KP_Down"): NextWorkspace,
     (modifiers: [Super, Ctrl], key: "KP_Up"): PreviousWorkspace,
-    (modifiers: [], key: "Print"): Spawn("env XDG_CURRENT_DESKTOP=sway QT_QPA_PLATFORM=xcb flameshot gui"),
+    (modifiers: [], key: "Print"): Spawn("flatpak run org.flameshot.Flameshot gui"),
 }
