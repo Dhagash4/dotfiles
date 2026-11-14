@@ -3,5 +3,6 @@
     "org.wezfurlong.wezterm",
     "code",
     "com.system76.CosmicFiles",
+    "foxglove-studio",
     "com.system76.CosmicTerm",
 ]
