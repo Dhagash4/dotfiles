@@ -1,0 +1,9 @@
+{
+    (modifiers: [Ctrl, Shift], key: "Left"): MoveToOutput(Left),
+    (modifiers: [Ctrl, Shift], key: "Right"): MoveToOutput(Right),
+    (modifiers: [Ctrl, Alt], key: "Down"): MoveToNextWorkspace,
+    (modifiers: [Ctrl, Alt], key: "Up"): MoveToPreviousWorkspace,
+    (modifiers: [Super, Ctrl], key: "KP_Down"): NextWorkspace,
+    (modifiers: [Super, Ctrl], key: "KP_Up"): PreviousWorkspace,
+    (modifiers: [], key: "Print"): Spawn("flameshot gui"),
+}
