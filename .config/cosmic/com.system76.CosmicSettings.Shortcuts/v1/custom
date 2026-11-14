@@ -6,4 +6,6 @@
     (modifiers: [Super, Ctrl], key: "KP_Down"): NextWorkspace,
     (modifiers: [Super, Ctrl], key: "KP_Up"): PreviousWorkspace,
     (modifiers: [], key: "Print"): Spawn("flatpak run org.flameshot.Flameshot gui"),
+    (modifiers: [Super], key: "Tab"): System(WorkspaceOverview),
+    (modifiers: [Super, Shift], key: "Tab"): Disable,
 }
